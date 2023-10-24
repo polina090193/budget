@@ -1,14 +1,28 @@
-'use client'
-
 import { useState } from 'react';
 import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import NextLink from 'next/link'
 
-import styles from './page.module.css'
-import { getAllCategories } from '../../../dataTemp/categories'
-
-export default function CategorySelect({defaultCategoryValue}: {defaultCategoryValue: string}) {
-  const categories = getAllCategories();
+export default function CategorySelect({ defaultCategoryValue }: { defaultCategoryValue: string }) {
+  const categories = [ // Temporary dummy data
+    {
+      id: '1',
+      name: 'Food',
+      slug: 'food',
+      link: '/category/food'
+    },
+    {
+      id: '2',
+      name: 'Transport',
+      slug: 'transport',
+      link: '/category/transport'
+    },
+    {
+      id: '3',
+      name: 'Entertainment',
+      slug: 'entertainment',
+      link: '/category/entertainment'
+    },
+  ];
 
   const [selectedCategoryValue, setSelectedCategory] = useState('');
 
@@ -24,7 +38,6 @@ export default function CategorySelect({defaultCategoryValue}: {defaultCategoryV
         defaultValue={defaultCategoryValue}
         value={selectedCategoryValue || defaultCategoryValue}
         onChange={handleCategoryChange}
-        className={styles.categorySelect}
         inputProps={{ 'aria-label': 'Select category' }}
         sx={{
           width: "20rem",
@@ -42,11 +55,11 @@ export default function CategorySelect({defaultCategoryValue}: {defaultCategoryV
               )
             } else {
               return (
-              <NextLink key={category.id} href={category.link ?? `/category/${category.slug}`}>
-                <MenuItem disabled={category.slug === defaultCategoryValue} value={category.slug}>
-                  {category.name}
-                </MenuItem>
-              </NextLink>
+                // <NextLink key={category.id} href={category.link ?? `/category/${category.slug}`}>
+                  <MenuItem key={category.id} disabled={category.slug === defaultCategoryValue} value={category.slug}>
+                    {category.name}
+                  </MenuItem>
+                // </NextLink>
               )
             }
           })
