@@ -16,8 +16,13 @@ declare interface SelectValue {
     slug: string;
 }
 
-declare interface Category extends SelectValue {
+declare interface BudgetCategoryRes extends Omit<SelectValue, 'id'> {
+    category_id: number;
     link?: string;
 }
 
-declare type Categories = Category[]
+declare interface BudgetCategory extends Omit<BudgetCategoryRes, 'category_id'> {
+    id: string;
+}
+
+declare type BudgetCategories = BudgetCategory[]

@@ -3,23 +3,32 @@ import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent } from
 import NextLink from 'next/link'
 
 export default function CustomSelect<T extends SelectValue>(
-  { data, defaultValue }: { data: T[], defaultValue: string }
+  { data,
+    defaultValue,
+    namePlural,
+    nameSingular,
+  }: {
+    data: T[],
+    defaultValue: string,
+    namePlural: string,
+    nameSingular: string,
+  }
 ) {
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelected] = useState('');
 
-  const handleValueChange = (event: SelectChangeEvent) => {
-    setSelectedValue(event.target.value as string);
+  const handleChange = (event: SelectChangeEvent) => {
+    setSelected(event.target.value as string);
   }
 
   return (
     <FormControl>
       <Select
-        labelId="categories-select"
-        id="categories-select"
+        labelId={`${namePlural}-select`}
+        id={`${namePlural}-select`}
         defaultValue={defaultValue}
         value={selectedValue || defaultValue}
-        onChange={handleValueChange}
-        inputProps={{ 'aria-label': 'Select category' }}
+        onChange={handleChange}
+        inputProps={{ 'aria-label': `Select ${nameSingular}` }}
         sx={{
           width: "20rem",
           marginTop: '2rem',
@@ -27,7 +36,7 @@ export default function CustomSelect<T extends SelectValue>(
         }}
       >
         {
-          data.map((item: T) => {
+          data.map((item: T & { link?: string }) => {
             if (item.slug === defaultValue) {
               return (
                 <MenuItem key={item.id} value={item.slug} selected>
@@ -36,8 +45,8 @@ export default function CustomSelect<T extends SelectValue>(
               )
             } else {
               return (
-                <NextLink key={item.id} href={`/category/${item.slug}`}>
-                  <MenuItem disabled={item.slug === defaultValue} value={item.slug}>
+                <NextLink key={item.id} href={item.link ?? `/${nameSingular}/${item.id}`}>
+                  <MenuItem key={item.id} disabled={item.slug === defaultValue} value={item.slug}>
                     {item.name}
                   </MenuItem>
                 </NextLink>
@@ -46,7 +55,7 @@ export default function CustomSelect<T extends SelectValue>(
           })
         }
       </Select>
-      <FormHelperText>Choose category</FormHelperText>
+      <FormHelperText>Choose {nameSingular}</FormHelperText>
     </FormControl>
   )
 }
