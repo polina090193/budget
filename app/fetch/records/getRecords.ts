@@ -1,6 +1,6 @@
-export async function getAllRecords() {
+export async function getAllRecords(categoryId?: number) {
   try {
-    const recordsRes = await fetch('http://localhost:3000/api/records');
+    const recordsRes = await fetch(`http://localhost:3000/api/records${categoryId ? '?categoryId='+categoryId : ''}`);
     const recordsData = await recordsRes.json();
 
     const recordsDataProcessed = recordsData.map((record: BudgetRecordRes) => ({

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import NextLink from 'next/link'
 
 export default function CustomSelect<T extends SelectValue>(

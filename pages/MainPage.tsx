@@ -9,7 +9,7 @@ export default function Dashboard(props: { recordsData: BudgetRecord[], categori
 
   return (
     <main className={styles.main}>
-      <CategorySelect categoriesData={categoriesData} defaultCategoryValue={categoriesData[0].slug} />
+      <CategorySelect categoriesData={categoriesData} defaultCategoryValue={'all'} />
       <RecordsList recordsData={recordsData} />
     </main>
   )

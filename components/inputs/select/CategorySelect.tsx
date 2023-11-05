@@ -1,4 +1,4 @@
-import CustomSelect from './CustomSelect';
+import CustomSelect from './CustomSelectWithLinks';
 
 export default function CategorySelect({
   categoriesData,

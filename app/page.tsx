@@ -1,9 +1,9 @@
 import MainPage from "@/pages/MainPage";
-import getAllRecords from "@/app/fetch/records/getAllRecords";
+import getRecords from "@/app/fetch/records/getRecords";
 import getAllCategories from "./fetch/categories/getAllCategories";
 
 export default async function Dashboard() {
-  const recordsData = await getAllRecords();
+  const recordsData = await getRecords();
   const categoriesData = await getAllCategories();
 
   return (
