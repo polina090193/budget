@@ -11,7 +11,7 @@ export default async function Category({params}: {params: {category_id: number}}
 
   return (
     <main className={styles.main}>
-      {/* <CategorySelect categoriesData={categoriesData} /> */}
+      <CategorySelect defaultCategoryValue={categoryData.slug} />
       <p>
         Category: {categoryData.name}
       </p>
