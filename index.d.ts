@@ -26,3 +26,13 @@ declare interface BudgetCategory extends Omit<BudgetCategoryRes, 'category_id'> 
 }
 
 declare type BudgetCategories = BudgetCategory[]
+
+declare type ToastSeverity = "error" | "info" | "success" | "warning";
+
+declare type SnackbarProps = {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+  toastSeverity: ToastSeverity;
+  toastMessage: string;
+  autoHideDuration?: number;
+}
