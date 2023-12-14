@@ -1,5 +1,6 @@
 "use client";
 
+import { checkLoginFormForErrors } from "@/utils/validation/checkLoginForm";
 import { useRef, useCallback, useState } from "react";
 import CustomSnackbar from "../info/CustomSnackbar";
 import EmailField from "../inputs/text/EmailField";
@@ -47,16 +48,10 @@ export default function AuthForm() {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
 
-    if (!email) {
-      setToastError('Email is required');
-      return;
-    }
-    if (!isValidEmail(email)) {
-      setToastError('Please enter a valid email address');
-      return;
-    }
-    if (!password) {
-      setToastError('Password is required');
+    const formError = checkLoginFormForErrors(email, password);
+
+    if (formError) {
+      setToastError(formError);
       return;
     }
 

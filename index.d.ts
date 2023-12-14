@@ -35,3 +35,14 @@ declare type ToastProps = {
   toastMessage: string;
   autoHideDuration?: number;
 }
+
+declare interface BudgetUserRes {
+    user_id: number;
+    name?: string;
+    email: string;
+    password_hash: string;
+}
+
+declare interface User extends Omit<BudgetUserRes, 'user_id'> {
+    id: number;
+}

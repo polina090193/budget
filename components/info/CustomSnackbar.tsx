@@ -19,11 +19,11 @@ export default function CustomSnackbar(
   return (
     <Snackbar
       open={open}
-      autoHideDuration={4000}
+      autoHideDuration={6000}
       onClose={handleCloseToast}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
-      <Alert elevation={6} variant="filled" onClose={handleCloseToast} severity={toastSeverity}>
+      <Alert sx={{ maxWidth: '30vw' }} elevation={6} variant="filled" onClose={handleCloseToast} severity={toastSeverity}>
         {toastMessage}
       </Alert>
     </Snackbar>
