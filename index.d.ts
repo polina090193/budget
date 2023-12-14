@@ -44,5 +44,5 @@ declare interface BudgetUserRes {
 }
 
 declare interface User extends Omit<BudgetUserRes, 'user_id'> {
-    id: number;
+    id?: number;
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import signUp from "@/app/fetch/auth/signUp";
+import { hashPassword } from "@/utils/hashPassword";
 import { checkLoginFormForErrors } from "@/utils/validation/checkLoginForm";
 import { useRef, useCallback, useState } from "react";
 import CustomSnackbar from "../info/CustomSnackbar";
@@ -37,12 +39,7 @@ export default function AuthForm() {
     });
   }, []);
 
-  const isValidEmail = useCallback((email: string) => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
-  }, []);
-
-  const submitLogin = useCallback((event: React.FormEvent) => {
+  const submitLogin = useCallback(async (event: React.FormEvent) => {
     event.preventDefault();
 
     const email = emailRef.current?.value;
@@ -55,10 +52,19 @@ export default function AuthForm() {
       return;
     }
 
-    console.log({
-      email: email,
-      password: password
-    });
+    if (!hasAccount) {
+      const hashedPassword = await hashPassword(password!);
+  
+      const response = await signUp({
+        name: nameRef.current?.value,
+        email: email!,
+        password_hash: hashedPassword,
+      });
+
+      if (response.status === 200) {
+        // Show success toast and profile menu
+      }
+    }
   }, [])
 
   return (

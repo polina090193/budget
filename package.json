@@ -27,6 +27,7 @@
     "sass": "^1.69.5"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/mysql": "^2.15.23",
     "@types/node": "^20",
     "@types/react": "^18",

@@ -10,6 +10,8 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     `INSERT INTO ${table_names.users} (name, email, password) VALUES (${name}, ${email}, ${password})`
   );
 
+  const userId = await query(`SELECT user_id FROM ${table_names.users} WHERE email = ${email}`);
+
   if (!user) {
     return new Response("Request failed", {
       status: 500,
@@ -19,7 +21,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
   return NextResponse.json(user, {
     status: 200,
     headers: {
-      'Set-Cookie': `user=${user.user_id}; Path=/; HttpOnly; Expires=${new Date(Date.now() + 60 * 60 * 24 * 7 * 1000).toUTCString()}`
-    }
+      'Set-Cookie': `user=${userId}; Path=/; HttpOnly; Expires=${new Date(Date.now() + 60 * 60 * 24 * 7 * 1000).toUTCString()}`
+    },
   })
 }
