@@ -2,19 +2,26 @@
 
 import { Snackbar, Alert } from "@mui/material";
 
-export default function CustomSnackbar(toastState: SnackbarProps) {
-  const { open, setOpen, toastSeverity, toastMessage } = toastState;
+interface SnackbarProps {
+  toastState: ToastProps;
+  closeToast: () => void
+}
+
+export default function CustomSnackbar(
+    { toastState, closeToast }: SnackbarProps,
+  ) {
+  const { open, toastSeverity, toastMessage } = toastState;
   
   const handleCloseToast = () => {
-    setOpen(false);
+    closeToast();
   };
 
   return (
     <Snackbar
       open={open}
-      autoHideDuration={3000}
+      autoHideDuration={4000}
       onClose={handleCloseToast}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
       <Alert elevation={6} variant="filled" onClose={handleCloseToast} severity={toastSeverity}>
         {toastMessage}

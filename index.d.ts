@@ -29,9 +29,8 @@ declare type BudgetCategories = BudgetCategory[]
 
 declare type ToastSeverity = "error" | "info" | "success" | "warning";
 
-declare type SnackbarProps = {
+declare type ToastProps = {
   open: boolean;
-  setOpen: (value: boolean) => void;
   toastSeverity: ToastSeverity;
   toastMessage: string;
   autoHideDuration?: number;

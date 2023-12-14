@@ -1,9 +1,9 @@
 "use client"
 
 import { useMemo, useState, useCallback } from 'react';
-import { Button, Drawer } from '@mui/material';
+import { Button } from '@mui/material';
 import styles from './MainMenu.module.css'
-import LoginForm from '../forms/LoginForm';
+import UserDrawer from './UserDrawer';
 
 export default function MainMenu() {
   const isLoggedIn = useMemo(() => false, []);
@@ -23,17 +23,11 @@ export default function MainMenu() {
   return (
     <header className={styles.header}>
       <Button onClick={pressUserButton}>{ isLoggedIn ? 'You' : 'Login' }</Button>
-      <Drawer
-        anchor={'right'}
-        open={isUserDrawerOpen}
-        onClose={toggleUserDrawer}
-        className={styles.loginButton}
-      >
-        {isLoggedIn ?
-          <p>You are logged in</p> : 
-          <LoginForm />
-        }
-      </Drawer>
+      <UserDrawer
+        isLoggedIn={isLoggedIn}
+        isUserDrawerOpen={isUserDrawerOpen}
+        toggleUserDrawer={toggleUserDrawer}
+      />
     </header>
   )
 }

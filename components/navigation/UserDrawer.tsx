@@ -1,39 +1,30 @@
 "use client"
 
-import { useMemo, useState, useCallback } from 'react';
-import { Button, Drawer } from '@mui/material';
-import styles from './MainMenu.module.css'
-import LoginForm from '../forms/LoginForm';
+import { Drawer } from '@mui/material';
+import styles from './UserDrawer.module.scss'
+import AuthForm from '../forms/AuthForm';
 
-export default function UserDrawer() {
-  const isLoggedIn = useMemo(() => false, []);
+interface UserDrawerProps {
+  isLoggedIn: boolean;
+  toggleUserDrawer: () => void;
+  isUserDrawerOpen: boolean;
+}
 
-  const [isUserDrawerOpen, setIsUserDrawerOpen] = useState(false)
-
-  const toggleUserDrawer = useCallback(() => setIsUserDrawerOpen(!isUserDrawerOpen), [isUserDrawerOpen]);
-  
-  const pressUserButton = useCallback(() => {
-    // if (isLoggedIn) {
-      toggleUserDrawer();
-    // } else {
-    //   openLoginModal();
-    // }
-  }, [isLoggedIn])
-
+export default function UserDrawer({
+  isLoggedIn,
+  toggleUserDrawer,
+  isUserDrawerOpen
+}: UserDrawerProps) {
   return (
-    <header className={styles.header}>
-      <Button onClick={pressUserButton}>{ isLoggedIn ? 'You' : 'Login' }</Button>
-      <Drawer
-        anchor={'right'}
-        open={isUserDrawerOpen}
-        onClose={toggleUserDrawer}
-        className={styles.loginButton}
-      >
-        {isLoggedIn ?
-          <p>You are logged in</p> : 
-          <LoginForm />
-        }
-      </Drawer>
-    </header>
+    <Drawer
+      anchor={'right'}
+      open={isUserDrawerOpen}
+      onClose={toggleUserDrawer}
+      className={styles.userDrawer}
+    >
+      {isLoggedIn ?
+        <p>You are logged in</p> : 
+        <AuthForm />}
+    </Drawer>
   )
 }
