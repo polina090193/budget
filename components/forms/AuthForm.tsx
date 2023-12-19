@@ -1,15 +1,17 @@
 "use client";
 
-import signUp from "@/app/fetch/auth/signUp";
-import { hashPassword } from "@/utils/hashPassword";
+import { useRef, useCallback, useState, useEffect } from "react";
+
 import { checkLoginFormForErrors } from "@/utils/validation/checkLoginForm";
-import { useRef, useCallback, useState } from "react";
+
 import CustomSnackbar from "../info/CustomSnackbar";
 import EmailField from "../inputs/text/EmailField";
 import NameField from "../inputs/text/NameField";
 import PasswordField from "../inputs/text/PasswordField";
 
 import styles from './AuthForm.module.css';
+import { signIn } from "next-auth/react";
+import { hashPassword } from "@/utils/auth/hashPassword";
 
 export default function AuthForm() {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -18,58 +20,72 @@ export default function AuthForm() {
 
   const [hasAccount, setHasAccount] = useState(true);
 
-  const [errorToastState, setErrorToastState] = useState<ToastProps>({
+  const [toastState, setToastState] = useState<ToastProps>({
     open: false,
     toastMessage: '',
     toastSeverity: 'error'
   })
 
-  const setToastError = useCallback((message: string) => {
-    setErrorToastState({
-      ...errorToastState,
+  const setToast = useCallback((severity: ToastSeverity, message: string) => {
+    setToastState({
+      ...toastState,
       open: true,
       toastMessage: message,
+      toastSeverity: severity,
     });
   }, []);
 
-  const closeErrorToast = useCallback(() => {
-    setErrorToastState({
-      ...errorToastState,
+  const closeToast = useCallback(() => {
+    setToastState({
+      ...toastState,
       open: false
     });
   }, []);
 
-  const submitLogin = useCallback(async (event: React.FormEvent) => {
+  const submitAuth = useCallback(async (event: React.FormEvent) => {
     event.preventDefault();
 
+    const name = nameRef.current?.value;
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
 
     const formError = checkLoginFormForErrors(email, password);
 
     if (formError) {
-      setToastError(formError);
+      setToast('error', formError);
       return;
     }
 
     if (!hasAccount) {
       const hashedPassword = await hashPassword(password!);
-  
-      const response = await signUp({
-        name: nameRef.current?.value,
-        email: email!,
-        password_hash: hashedPassword,
-      });
+      const signUpResponse = await fetch(
+        'http://localhost:3000/api/auth/signup',
+        {
+          method: 'POST',
+          body: JSON.stringify({ email, password_hash: hashedPassword, name })
+        }
+      );
 
-      if (response.status === 200) {
-        // Show success toast and profile menu
+      if (signUpResponse.status === 201) {
+        setToast('success', 'Account created successfully');
+      } else {
+        setToast('error', 'Something went wrong');
+      }
+
+      // TODO set isLoggedIn and show profile page here
+    } else {
+      const signInResponse = await signIn('credentials', { email, password, redirect: false });
+      if (signInResponse?.status === 200) {
+        setToast('success', 'Successfully logged in');
+      } else {
+        setToast('error', 'Login or password is incorrect');
       }
     }
-  }, [])
+  }, [hasAccount])
 
   return (
     <div className={styles.loginContainer}>
-      <form onSubmit={submitLogin} className={styles.loginForm}>
+      <form onSubmit={submitAuth} className={styles.loginForm}>
         <h1>{hasAccount ? 'Login' : 'Register'}</h1>
 
         <NameField inputRef={nameRef} />
@@ -78,26 +94,26 @@ export default function AuthForm() {
 
         <PasswordField inputRef={passwordRef} />
 
-        <button type="submit">Login</button>
+        <button type="submit">{hasAccount ? 'Login' : 'Register'}</button>
 
-        {hasAccount ? (
-          <div>Don't have an account?
-            <button
-              type="button"
-              onClick={() => setHasAccount(!hasAccount)}>
-              Register
-            </button>
-          </div>) : (<div>Already have an account?
-            <button
-              type="button"
-              onClick={() => setHasAccount(!hasAccount)}>
-              Login with existing account
-            </button>
-          </div>)}
 
       </form>
+      {hasAccount ? (
+        <div>Don't have an account?
+          <button
+            type="button"
+            onClick={() => setHasAccount(prevHasAccount => !prevHasAccount)}>
+            Register
+          </button>
+        </div>) : (<div>Already have an account?
+          <button
+            type="button"
+            onClick={() => setHasAccount(prevHasAccount => !prevHasAccount)}>
+            Login with existing account
+          </button>
+        </div>)}
       <CustomSnackbar
-        toastState={errorToastState} closeToast={closeErrorToast}
+        toastState={toastState} closeToast={closeToast}
       />
     </div>
   )
