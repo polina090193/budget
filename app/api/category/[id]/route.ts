@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 export async function GET(req: NextApiRequest, { params }: { params: { id: number } }) {
   const { id } = params;
   
-  const category = await query(`SELECT * FROM ${table_names.categories} WHERE category_id = ${id}`);
+  const category = await query(`SELECT * FROM ${table_names.categories} WHERE category_id = ?`, [id]);
   
   if (!category) {
     return new Response("Request failed", {

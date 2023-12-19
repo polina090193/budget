@@ -68,6 +68,8 @@ export default function AuthForm() {
 
       if (signUpResponse.status === 201) {
         setToast('success', 'Account created successfully');
+      } else if (signUpResponse.status === 409) {
+        setToast('error', 'User with this email already exists');
       } else {
         setToast('error', 'Something went wrong');
       }

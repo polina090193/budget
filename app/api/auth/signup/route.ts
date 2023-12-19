@@ -6,12 +6,21 @@ export async function POST(req: Request, res: Response) {
   const body = await req.json();
   const { name, email, password_hash } = body;
 
+  const existingUser = await query(
+    `SELECT * FROM ${table_names.users} WHERE email = ?`,
+    [email]
+  ) as BudgetUserRes[];
+
+  if (existingUser?.length > 0) {
+    return new Response("User with this email already exists", {
+      status: 409,
+    });
+  }
+
   const user = await query(
     `INSERT INTO ${table_names.users} (name, email, password_hash) VALUES (?, ?, ?)`,
     [name, email, password_hash]
   );
-
-  // const userId = await query(`SELECT user_id FROM ${table_names.users} WHERE email = ${email}`);
 
   if (!user) {
     return new Response("Request failed", {
@@ -21,8 +30,5 @@ export async function POST(req: Request, res: Response) {
 
   return NextResponse.json({}, {
     status: 201,
-    // headers: {
-    //   'Set-Cookie': `user=${userId}; Path=/; HttpOnly; Expires=${new Date(Date.now() + 60 * 60 * 24 * 7 * 1000).toUTCString()}`
-    // },
   })
 }
