@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState, useEffect } from "react";
+import { useRef, useCallback, useState } from "react";
 
 import { checkLoginFormForErrors } from "@/utils/validation/checkLoginForm";
 
@@ -72,7 +72,6 @@ export default function AuthForm() {
         setToast('error', 'Something went wrong');
       }
 
-      // TODO set isLoggedIn and show profile page here
     } else {
       const signInResponse = await signIn('credentials', { email, password, redirect: false });
       if (signInResponse?.status === 200) {
