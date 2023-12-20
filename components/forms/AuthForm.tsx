@@ -2,7 +2,7 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 
-import { checkLoginFormForErrors } from "@/utils/validation/checkLoginForm";
+import { validateAuthForm } from "@/utils/validation/validateAuthForm";
 
 import CustomSnackbar from "../info/CustomSnackbar";
 import EmailField from "../inputs/text/EmailField";
@@ -56,7 +56,7 @@ export default function AuthForm() {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
 
-    const formError = checkLoginFormForErrors(email, password);
+    const formError = validateAuthForm(email, password);
 
     if (formError) {
       setToast('error', formError);

@@ -2,7 +2,7 @@ import { isValidEmail } from "./isValidEmail";
 import { isValidPassword } from "./isValidPassword";
 
 
-export const checkLoginFormForErrors = (
+export const validateAuthForm = (
   email: string | undefined,
   password: string | undefined,
   ): string | null => {
@@ -19,9 +19,9 @@ export const checkLoginFormForErrors = (
     return 'Please enter a valid email address';
   }
 
-  // if (!isValidPassword(password)) {
-  //   return `The password should contain at least one lowercase letter, one uppercase letter, one digit, and a minimum length of 8 characters`;
-  // }
+  if (!isValidPassword(password)) {
+    return `The password should contain at least one lowercase letter, one uppercase letter, one digit, and a minimum length of 8 characters`;
+  }
 
   return null;
 };
