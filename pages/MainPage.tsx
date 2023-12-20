@@ -17,7 +17,7 @@ export default function Dashboard(props: { recordsData: BudgetRecord[] }) {
     <main className={styles.main}>
       <MainMenu isLoggedIn={isLoggedIn} session={session} user={session?.user} />
       <CategorySelect defaultCategoryValue={'all'} />
-      <RecordsList recordsData={recordsData} />
+      { isLoggedIn && <RecordsList user={session?.user} recordsData={recordsData} /> }
     </main>
   )
 }

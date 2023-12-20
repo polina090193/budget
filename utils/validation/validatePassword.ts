@@ -1,22 +1,9 @@
-import { isValidEmail } from "./isValidEmail";
 import { isValidPassword } from "./isValidPassword";
 
-
-export const validateAuthForm = (
-  email: string | undefined,
-  password: string | undefined,
-  ): string | null => {
-
-  if (!email) {
-    return 'Email is required';
-  }
+export const validatePassword = (password: string | undefined): string | null => {
 
   if (!password) {
     return 'Password is required';
-  }
-
-  if (!isValidEmail(email)) {
-    return 'Please enter a valid email address';
   }
 
   if (!isValidPassword(password)) {

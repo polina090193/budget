@@ -2,7 +2,8 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 
-import { validateAuthForm } from "@/utils/validation/validateAuthForm";
+import { validateEmail } from "@/utils/validation/validateEmail";
+import { validatePassword } from "@/utils/validation/validatePassword";
 
 import CustomSnackbar from "../info/CustomSnackbar";
 import EmailField from "../inputs/text/EmailField";
@@ -56,15 +57,23 @@ export default function AuthForm() {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
 
-    const formError = validateAuthForm(email, password);
+    const emailError = validateEmail(email);
 
-    if (formError) {
-      setToast('error', formError);
+    if (emailError) {
+      setToast('error', emailError);
       return;
     }
 
     if (!hasAccount) {
+      const passwordError = validatePassword(password);
+
+      if (passwordError) {
+        setToast('error', passwordError);
+        return;
+      }
+
       const hashedPassword = await hashPassword(password!);
+
       const signUpResponse = await fetch(
         'http://localhost:3000/api/auth/signup',
         {
@@ -74,12 +83,14 @@ export default function AuthForm() {
       );
 
       if (signUpResponse.status === 201) {
-        setToast('success', 'Account created successfully');
+        setToast('success', 'Account is created successfully');
       } else if (signUpResponse.status === 409) {
         setToast('error', 'User with this email already exists');
       } else {
         setToast('error', 'Something went wrong');
       }
+
+      setHasAccount(true);
 
     } else {
       const signInResponse = await signIn('credentials', { email, password, redirect: false });
@@ -103,7 +114,6 @@ export default function AuthForm() {
         <PasswordField inputRef={passwordRef} />
 
         <button type="submit">{hasAccount ? 'Login' : 'Register'}</button>
-
 
       </form>
       {hasAccount ? (
