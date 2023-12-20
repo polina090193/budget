@@ -1,15 +1,15 @@
 "use client"
 
-import { useMemo, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@mui/material';
 import styles from './MainMenu.module.css'
 import UserDrawer from './UserDrawer';
-import { useSession } from 'next-auth/react';
+import { Session } from 'next-auth';
 
-export default function MainMenu() {
-  const { data: session, status: sessionStatus } = useSession();
-  const isLoggedIn = useMemo(() => sessionStatus === "authenticated", [sessionStatus]);
-
+export default function MainMenu(
+  { isLoggedIn, session, user }:
+    { isLoggedIn: boolean, session: Session | null, user: NextAuthUser| undefined }
+) {
   const [isUserDrawerOpen, setIsUserDrawerOpen] = useState(false)
 
   const toggleUserDrawer = useCallback(

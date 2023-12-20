@@ -1,8 +1,9 @@
 "use client"
 
-import { Drawer } from '@mui/material';
+import { Button, Drawer } from '@mui/material';
 import styles from './UserDrawer.module.scss'
 import AuthForm from '../forms/AuthForm';
+import { signOut } from "next-auth/react"
 
 interface UserDrawerProps {
   isLoggedIn: boolean;
@@ -23,8 +24,13 @@ export default function UserDrawer({
       className={styles.userDrawer}
     >
       {isLoggedIn ?
-        <p>You are logged in</p> : 
-        <AuthForm />}
+        <>
+          <p>You are logged in</p>
+          <Button onClick={() => signOut()}>
+            Logout
+          </Button>
+        </>
+        : <AuthForm />}
     </Drawer>
   )
 }

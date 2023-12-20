@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 
 import { checkLoginFormForErrors } from "@/utils/validation/checkLoginForm";
 
@@ -14,9 +14,10 @@ import { signIn } from "next-auth/react";
 import { hashPassword } from "@/utils/auth/hashPassword";
 
 export default function AuthForm() {
+  const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const nameRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [hasAccount, setHasAccount] = useState(true);
 
@@ -41,6 +42,12 @@ export default function AuthForm() {
       open: false
     });
   }, []);
+
+  useEffect(() => {
+    if (formRef?.current) {
+      formRef.current.reset();
+    }
+  }, [hasAccount]);
 
   const submitAuth = useCallback(async (event: React.FormEvent) => {
     event.preventDefault();
@@ -86,7 +93,7 @@ export default function AuthForm() {
 
   return (
     <div className={styles.loginContainer}>
-      <form onSubmit={submitAuth} className={styles.loginForm}>
+      <form ref={formRef} onSubmit={submitAuth} className={styles.loginForm}>
         <h1>{hasAccount ? 'Login' : 'Register'}</h1>
 
         <NameField inputRef={nameRef} />

@@ -29,7 +29,7 @@ declare type BudgetCategories = BudgetCategory[]
 
 declare type ToastSeverity = "error" | "info" | "success" | "warning";
 
-declare type ToastProps = {
+declare interface ToastProps {
   open: boolean;
   toastSeverity: ToastSeverity;
   toastMessage: string;
@@ -45,4 +45,10 @@ declare interface BudgetUserRes {
 
 declare interface User extends Omit<BudgetUserRes, 'user_id'> {
     id?: number;
+}
+
+declare interface NextAuthUser {
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+    image?: string | null | undefined;
 }
