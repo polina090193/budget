@@ -6,9 +6,9 @@ import { validateEmail } from "@/utils/validation/validateEmail";
 import { validatePassword } from "@/utils/validation/validatePassword";
 
 import CustomSnackbar from "../info/CustomSnackbar";
-import EmailField from "../inputs/text/EmailField";
-import NameField from "../inputs/text/NameField";
-import PasswordField from "../inputs/text/PasswordField";
+import EmailField from "../inputs/text/auth/EmailField";
+import NameField from "../inputs/text/auth/NameField";
+import PasswordField from "../inputs/text/auth/PasswordField";
 
 import styles from './AuthForm.module.css';
 import { signIn } from "next-auth/react";

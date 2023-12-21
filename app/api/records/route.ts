@@ -7,8 +7,8 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
   const {searchParams} = new URL(req.url);
   const categoryId = searchParams?.get('categoryId') || null;
   
-  const records = await query(`SELECT * FROM ${table_names.records}${categoryId ? ' WHERE category_id = '+categoryId : ''}`);
-
+  const records = await query(`SELECT * FROM ${table_names.records}${categoryId ? ' WHERE category_id = ?' : ''}`, [categoryId]);
+  
   if (!records) {
     return new Response("Request failed", {
       status: 500,
