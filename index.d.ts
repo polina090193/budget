@@ -1,13 +1,20 @@
-declare interface BudgetRecordRes {
+declare interface BudgetRecord {
     record_id: number;
-    date: Date;
+    date: string;
     title: string;
     direction: 'PLUS' | 'MINUS';
     sum: number;
+    category: number;
+    user_id: number;
 }
 
-declare interface BudgetRecord extends Omit<BudgetRecordRes, 'record_id'> {
-    id: number;
+declare interface BudgetRecordReq extends Omit<BudgetRecordRes, 'record_id'> {}
+
+declare type BudgetRecords = (BudgetRecord | BudgetRecordReq)[]
+
+declare interface BudgetRecordsWithUpdate {
+    recordsData: BudgetRecords,
+    updateRecordsData: void
 }
 
 declare interface SelectValue {

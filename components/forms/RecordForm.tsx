@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState, useEffect } from "react";
+import { useRef, useCallback, useState, useEffect, Dispatch, SetStateAction } from "react";
 
 import { validateEmail } from "@/utils/validation/validateEmail";
 import { validatePassword } from "@/utils/validation/validatePassword";
@@ -11,12 +11,11 @@ import NameField from "../inputs/text/auth/NameField";
 import PasswordField from "../inputs/text/auth/PasswordField";
 
 import styles from './AuthForm.module.css';
-import { signIn } from "next-auth/react";
-import { hashPassword } from "@/utils/auth/hashPassword";
 import TitleField from "../inputs/text/record/TitleField";
 import SumField from "../inputs/text/record/SumField";
+import { dateSQLadapter } from "@/utils/adapters/dateSQLadapter";
 
-export default function RecordForm() {
+export default function RecordForm({updateRecordsData}: {updateRecordsData: () => void}) {
   const titleRef = useRef<HTMLInputElement>(null);
   const sumRef = useRef<HTMLInputElement>(null);
   const directionRef = useRef<HTMLSelectElement>(null);
@@ -47,18 +46,31 @@ export default function RecordForm() {
   const submit = useCallback(async (event: React.FormEvent) => {
     event.preventDefault();
 
+    const title = titleRef.current?.value;
+    const direction = 'PLUS';/* directionRef.current?.value; */
+
+    const newRecordData: BudgetRecordReq = {
+      date: dateSQLadapter(new Date()),
+      title: title || (direction === 'PLUS' ? 'Income' : 'Expense'),
+      direction,
+      sum: 100,
+      category: 8,
+      user_id: 39
+    }
+
     try {
       const createRecordResponse = await fetch(
         'http://localhost:3000/api/records/create',
         {
           method: 'POST',
-          body: JSON.stringify({ date: '2023-10-22 17:02:58', title: 'record', direction: 'PLUS', sum: 100, category: 8, user_id: 39 })
+          body: JSON.stringify(newRecordData)
         }
       );
-      const data = createRecordResponse.json();
-      console.log(data);
 
-      return data
+      const newRecord = await createRecordResponse.json();
+      await updateRecordsData();
+      return newRecord;
+
     } catch (error) {
       console.log(error);
     }

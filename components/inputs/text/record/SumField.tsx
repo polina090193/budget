@@ -21,6 +21,7 @@ export default function SumField({ inputRef }: { inputRef: RefObject<HTMLInputEl
       id="sum-field"
       label="Sum"
       onChange={checkForOnlyNumerics}
+      autoComplete="off"
     />
   )
 }

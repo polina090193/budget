@@ -4,26 +4,30 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   // try {
-    const body = await req.json();
-    const { date, title, direction, sum, category, user_id } = body;
+  const body = await req.json();
+  const { date, title, direction, sum, category, user_id } = body;
 
-    const valuesArr = [title, direction, sum, category, user_id];
-    if (date) {
-      valuesArr.unshift(date);
-    }
+  const valuesArr = [title, direction, sum, category, user_id];
+  if (date) {
+    valuesArr.unshift(date);
+  }
 
-    const newRecord = await query(
-      `INSERT INTO ${table_names.records} (${date ? 'date, ' : ''} title, direction, sum, category_id, user_id) VALUES (${date ? '?, ' : ''} ?, ?, ?, ?, ?)`,
-      valuesArr
-    );
+  const result = await query(
+    `INSERT INTO ${table_names.records} (${date ? 'date, ' : ''} title, direction, sum, category_id, user_id) VALUES (${date ? '?, ' : ''} ?, ?, ?, ?, ?)`,
+    valuesArr
+  );
 
-  if (!newRecord) {
+  if (!result) {
     return new Response("Request failed", {
       status: 500,
     });
   }
 
-  return NextResponse.json('Record created', {
+  const insertedId = ('insertId' in result) ? result.insertId : undefined;
+
+  const newRecordRows = await query(`SELECT * FROM ${table_names.records} WHERE record_id = ?`, [insertedId]);
+
+  return NextResponse.json(newRecordRows, {
     status: 201,
   })
 

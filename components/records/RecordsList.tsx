@@ -2,12 +2,12 @@
 
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import { getCategoryNameById } from '@/utils/getCategoryNameById';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { useContext } from 'react';
+import { DataGrid, GridColDef, GridRowIdGetter, GridValueGetterParams } from '@mui/x-data-grid';
+import { useEffect, useContext } from 'react';
 
 export default function RecordsList(
   { recordsData, user }:
-    { recordsData: BudgetRecord[], user: NextAuthUser | undefined }
+    { recordsData: BudgetRecords, user: NextAuthUser | undefined }
 ) {
   const categoriesData = useContext(CategoriesContext);
 
@@ -22,10 +22,16 @@ export default function RecordsList(
       valueGetter: (params: GridValueGetterParams) => getCategoryNameById(categoriesData, params.row.category_id),
     },
   ];
+
+  const getRowId: GridRowIdGetter<any> | undefined = (row) => {
+    return row.record_id;
+  }
+
   if (user) {
     return (
       <>
         <DataGrid
+          getRowId={getRowId}
           rows={recordsData}
           columns={columns}
           initialState={{
