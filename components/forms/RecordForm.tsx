@@ -1,25 +1,35 @@
 "use client";
 
-import { useRef, useCallback, useState, useEffect, Dispatch, SetStateAction } from "react";
-
-import { validateEmail } from "@/utils/validation/validateEmail";
-import { validatePassword } from "@/utils/validation/validatePassword";
+import { useRef, useCallback, useState, useMemo, useContext } from "react";
 
 import CustomSnackbar from "../info/CustomSnackbar";
-import EmailField from "../inputs/text/auth/EmailField";
-import NameField from "../inputs/text/auth/NameField";
-import PasswordField from "../inputs/text/auth/PasswordField";
 
 import styles from './AuthForm.module.css';
 import TitleField from "../inputs/text/record/TitleField";
 import SumField from "../inputs/text/record/SumField";
 import { dateSQLadapter } from "@/utils/adapters/dateSQLadapter";
+import DateField from "../inputs/text/record/DateField";
+import DirectionField from "../inputs/text/record/DirectionField";
+import CategorySelect from "../inputs/select/CategorySelect";
+import { CategoriesContext } from "@/context-providers/CategoriesProvider";
 
-export default function RecordForm({updateRecordsData}: {updateRecordsData: () => void}) {
+export default function RecordForm({
+  user,
+  fetchRecords,
+}: {
+  user: NextAuthUser | undefined,
+  fetchRecords: () => void,
+}) {
   const titleRef = useRef<HTMLInputElement>(null);
   const sumRef = useRef<HTMLInputElement>(null);
+  const dateRef = useRef<HTMLInputElement>(null);
   const directionRef = useRef<HTMLSelectElement>(null);
-  // const formRef = useRef<HTMLFormElement>(null);
+  const categoryRef = useRef<HTMLSelectElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const categoriesData = useContext(CategoriesContext);
+
+  const firstCategoryValue = useMemo(() => categoriesData[0]?.id ?? '', [categoriesData]);
 
   const [toastState, setToastState] = useState<ToastProps>({
     open: false,
@@ -46,16 +56,15 @@ export default function RecordForm({updateRecordsData}: {updateRecordsData: () =
   const submit = useCallback(async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const title = titleRef.current?.value;
-    const direction = 'PLUS';/* directionRef.current?.value; */
-
-    const newRecordData: BudgetRecordReq = {
-      date: dateSQLadapter(new Date()),
-      title: title || (direction === 'PLUS' ? 'Income' : 'Expense'),
-      direction,
-      sum: 100,
-      category: 8,
-      user_id: 39
+    const formValues = {
+      title: titleRef.current?.value,
+      sum: sumRef.current?.value,
+      date: dateSQLadapter(dateRef.current?.value
+        ? new Date(dateRef.current?.value)
+        : new Date()),
+      direction: directionRef.current?.value,
+      category: categoryRef.current?.value,
+      user_id: user?.id,
     }
 
     try {
@@ -63,14 +72,15 @@ export default function RecordForm({updateRecordsData}: {updateRecordsData: () =
         'http://localhost:3000/api/records/create',
         {
           method: 'POST',
-          body: JSON.stringify(newRecordData)
+          body: JSON.stringify(formValues)
         }
       );
 
-      const newRecord = await createRecordResponse.json();
-      await updateRecordsData();
-      return newRecord;
+      await fetchRecords();
+      formRef?.current?.reset();
 
+      const newRecord = await createRecordResponse.json();
+      return newRecord;
     } catch (error) {
       console.log(error);
     }
@@ -78,18 +88,18 @@ export default function RecordForm({updateRecordsData}: {updateRecordsData: () =
 
   return (
     <>
-      <form onSubmit={submit} className={styles.loginForm}>
+      <form ref={formRef} onSubmit={submit} className={styles.loginForm}>
         <h1>Record form</h1>
 
         <TitleField inputRef={titleRef} />
 
-        Date Field
+        <DateField inputRef={dateRef} />
 
-        Direction field
+        <DirectionField inputRef={directionRef} />
 
         <SumField inputRef={sumRef} />
 
-        Category field
+        <CategorySelect inputRef={categoryRef} defaultCategoryValue={firstCategoryValue}></CategorySelect>
 
         <button type="submit">Add record</button>
 

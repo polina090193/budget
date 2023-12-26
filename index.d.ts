@@ -55,6 +55,7 @@ declare interface User extends Omit<BudgetUserRes, 'user_id'> {
 }
 
 declare interface NextAuthUser {
+    id?: number;
     name?: string | null | undefined;
     email?: string | null | undefined;
     image?: string | null | undefined;

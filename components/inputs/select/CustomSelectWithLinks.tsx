@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { RefObject, useState } from 'react';
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import NextLink from 'next/link'
 
@@ -7,11 +7,13 @@ export default function CustomSelect<T extends SelectValue>(
     defaultValue,
     namePlural,
     nameSingular,
+    inputRef,
   }: {
     data: T[],
     defaultValue: string,
     namePlural: string,
     nameSingular: string,
+    inputRef?: RefObject<HTMLSelectElement>,
   }
 ) {
   const [selectedValue, setSelected] = useState('');
@@ -23,6 +25,7 @@ export default function CustomSelect<T extends SelectValue>(
   return (
     <FormControl>
       <Select
+        inputRef={inputRef}
         labelId={`${namePlural}-select`}
         id={`${namePlural}-select`}
         defaultValue={defaultValue}
@@ -37,16 +40,16 @@ export default function CustomSelect<T extends SelectValue>(
       >
         {
           data.map((item: T & { link?: string }) => {
-            if (item.slug === defaultValue) {
+            if (item.id === defaultValue || !item.link) {
               return (
-                <MenuItem key={item.id} value={item.slug} selected>
+                <MenuItem key={item.id} value={item.id} selected>
                   {item.name}
                 </MenuItem>
               )
             } else {
               return (
                 <NextLink key={item.id} href={item.link ?? `/${nameSingular}/${item.id}`}>
-                  <MenuItem key={item.id} disabled={item.slug === defaultValue} value={item.slug}>
+                  <MenuItem key={item.id} disabled={item.id === defaultValue} value={item.id}>
                     {item.name}
                   </MenuItem>
                 </NextLink>

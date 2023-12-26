@@ -7,8 +7,8 @@ import UserDrawer from './UserDrawer';
 import { Session } from 'next-auth';
 
 export default function MainMenu(
-  { isLoggedIn, session, user }:
-    { isLoggedIn: boolean, session: Session | null, user: NextAuthUser| undefined }
+  { isLoggedIn, session }:
+    { isLoggedIn: boolean, session: Session | null }
 ) {
   const [isUserDrawerOpen, setIsUserDrawerOpen] = useState(false)
 

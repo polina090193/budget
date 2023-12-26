@@ -3,7 +3,6 @@ import { table_names } from "@/db/table_names";
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  // try {
   const body = await req.json();
   const { date, title, direction, sum, category, user_id } = body;
 
@@ -30,22 +29,4 @@ export async function POST(req: Request) {
   return NextResponse.json(newRecordRows, {
     status: 201,
   })
-
-  //   if (Array.isArray(newRecord) && newRecord.length > 0) {
-  //     // Assuming newRecord contains the inserted record data
-  //     return new Response("Record created", {
-  //       status: 201,
-  //     });
-  //   } else {
-  //     return new Response("No record found", {
-  //       status: 404,
-  //     });
-  //   }
-  // } catch (error) {
-  //   console.error("Error:", error);
-  //   return new Response("Internal server error", {
-  //     status: 500,
-  //   });
-  // }
-
 }

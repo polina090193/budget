@@ -3,7 +3,7 @@
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import { getCategoryNameById } from '@/utils/getCategoryNameById';
 import { DataGrid, GridColDef, GridRowIdGetter, GridValueGetterParams } from '@mui/x-data-grid';
-import { useEffect, useContext } from 'react';
+import { useContext } from 'react';
 
 export default function RecordsList(
   { recordsData, user }:

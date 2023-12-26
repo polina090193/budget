@@ -3,16 +3,13 @@ export async function getAllCategories() {
     const categoriesRes = await fetch('http://localhost:3000/api/categories');
     const categoriesData = await categoriesRes.json();
 
-    const categoriesDataProcessed: BudgetCategory[] = [{
-      id: '0',
-      name: 'All',
-      slug: 'all',
-      link: '/',
-    }, ...categoriesData.map((category: BudgetCategoryRes) => ({
-      ...category,
-      id: category.category_id.toString(),
-    }))];
-    
+    const categoriesDataProcessed: BudgetCategory[] = [
+      ...categoriesData.map((category: BudgetCategoryRes) => ({
+        ...category,
+        id: category.category_id.toString(),
+      }))
+    ];
+
     return categoriesDataProcessed;
   } catch (error) {
     console.log('Error by categories loading:' + error);
