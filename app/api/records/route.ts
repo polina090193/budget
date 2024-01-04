@@ -6,18 +6,21 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
 
 export async function GET(req: NextRequest, res: NextApiResponse) {
+  const { searchParams } = new URL(req.url);
+  
+  const userId = searchParams?.get('userId') || null;
   const session = await getServerSession(authOptions);
-
-  if (!session) {
-    res.status(401).json({ message: "You must be logged in." });
-    return;
+  
+  if (!session || !userId || Number(session.user.id) !== Number(userId)) {
+    return new Response("Authorization error.", {
+      status: 401,
+    });
   }
   
-  const { searchParams } = new URL(req.url);
-  const categoryId = searchParams?.get('categoryId') || null;
-
   let recordsSQLQuery = `SELECT * FROM ${table_names.records} WHERE user_id = ?`;
+
   const params = [session.user.id];
+  const categoryId = searchParams?.get('categoryId') || null;
 
   if (categoryId) {
     recordsSQLQuery += ' AND category_id = ?';

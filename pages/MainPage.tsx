@@ -15,24 +15,31 @@ export default function Dashboard() {
   const [recordsData, setRecordsData] = useState<BudgetRecords>([]);
 
   const fetchRecords = useCallback(async () => {
+    if (!session?.user) {
+      console.log('Error by records loading on client: user is not defined');
+      return;
+    }
+
     try {
-      const newRecordsData = await getRecords();
+      const newRecordsData = await getRecords(session?.user?.id);
       setRecordsData(newRecordsData);
     } catch (error) {
       console.log('Error by records loading on client:' + error);
     }
-  }, [setRecordsData]);
+  }, [session?.user?.id, setRecordsData]);
 
   useEffect(() => {
-    fetchRecords();
-  }, []);
+    if (session) {
+      fetchRecords();
+    }
+  }, [session]);
 
   return (
     <main className={styles.main}>
       <MainMenu isLoggedIn={isLoggedIn} session={session} />
-      <CategorySelect defaultCategoryValue={'0'} isWithAll={true} />
       {isLoggedIn &&
         <>
+          <CategorySelect defaultCategoryValue={'0'} isWithAll={true} />
           <RecordsList user={session?.user} recordsData={recordsData} />
           <RecordForm user={session?.user} fetchRecords={fetchRecords}  />
         </>

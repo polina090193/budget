@@ -1,7 +1,12 @@
-async function getRecords(categoryId?: number) {
+async function getRecords(userId?: string | undefined, categoryId?: number) {
+  if (!userId) {
+    console.log('Error by records loading: user is not defined');
+    return;
+  }
+  
   try {
     const recordsRes = await fetch(
-      `http://localhost:3000/api/records${categoryId ? '?categoryId=' + categoryId : ''}`,
+      `http://localhost:3000/api/records?userId=${userId}${categoryId ? '&categoryId=' + categoryId : ''}`,
       { cache: 'no-store' },
     );
     
