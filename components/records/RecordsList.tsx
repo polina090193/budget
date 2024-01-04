@@ -2,8 +2,9 @@
 
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import { getCategoryNameById } from '@/utils/getCategoryNameById';
-import { DataGrid, GridColDef, GridRowIdGetter, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridCellParams, GridColDef, GridRowIdGetter, GridRowParams, GridValueGetterParams } from '@mui/x-data-grid';
 import { useContext } from 'react';
+import styles from './RecordsList.module.css'
 
 export default function RecordsList(
   { recordsData, user }:
@@ -12,9 +13,23 @@ export default function RecordsList(
   const categoriesData = useContext(CategoriesContext);
 
   const columns: GridColDef[] = [
-    { field: 'date', headerName: 'Date', width: 130 },
-    { field: 'title', headerName: 'Title', width: 130 },
-    { field: 'sum', headerName: 'Sum', type: 'number', width: 70 },
+    {
+      field: 'direction',
+      headerName: '',
+      valueGetter: (params) => {
+        if (!params.value) {
+          return '?';
+        } else if (params.value === 'PLUS') {
+          return '➕';
+        } else if (params.value === 'MINUS') {
+          return '➖';
+        }
+      },
+      width: 40
+    },
+    { field: 'date', headerName: 'Date', width: 120 },
+    { field: 'title', headerName: 'Title', width: 120 },
+    { field: 'sum', headerName: 'Sum', type: 'number', width: 80 },
     {
       field: 'category_id',
       headerName: 'Category',
@@ -38,6 +53,12 @@ export default function RecordsList(
             pagination: {
               paginationModel: { page: 0, pageSize: 10 },
             },
+          }}
+          getRowClassName={(params: GridRowParams<any>) => {
+            if (params.row.direction === 'MINUS') {
+              return styles.expenseRow;
+            }
+            return styles.incomeRow;
           }}
           pageSizeOptions={[10, 20, 50]}
           checkboxSelection
