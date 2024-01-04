@@ -30,7 +30,7 @@ export default function UserDrawer({
             Logout
           </Button>
         </>
-        : <AuthForm />}
+        : <AuthForm toggleUserDrawer={toggleUserDrawer} />}
     </Drawer>
   )
 }

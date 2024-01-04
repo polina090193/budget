@@ -15,7 +15,7 @@ export default async function Category({params}: {params: {category_id: number}}
       <p>
         Category: {categoryData.name}
       </p>
-      <RecordsList recordsData={recordsData} />
+      <RecordsList user={user} recordsData={recordsData} />
     </main>
   )
 }

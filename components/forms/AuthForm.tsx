@@ -14,7 +14,7 @@ import styles from './AuthForm.module.css';
 import { signIn } from "next-auth/react";
 import { hashPassword } from "@/utils/auth/hashPassword";
 
-export default function AuthForm() {
+export default function AuthForm({toggleUserDrawer}: {toggleUserDrawer: () => void}) {
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -96,6 +96,7 @@ export default function AuthForm() {
       const signInResponse = await signIn('credentials', { email, password, redirect: false });
       if (signInResponse?.status === 200) {
         setToast('success', 'Successfully logged in');
+        toggleUserDrawer();
       } else {
         setToast('error', 'Login or password is incorrect');
       }
