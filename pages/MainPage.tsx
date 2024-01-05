@@ -11,8 +11,11 @@ import getRecords from '@/app/fetch/records/getRecords';
 
 export default function Dashboard() {
   const { data: session, status: sessionStatus } = useSession();
-  const isLoggedIn = useMemo(() => sessionStatus === "authenticated", [sessionStatus]);
   const [recordsData, setRecordsData] = useState<BudgetRecords>([]);
+  const [areRecordsLoading, setAreRecordsLoading] = useState(false);
+
+  const isLoggedIn = useMemo(() => sessionStatus === "authenticated", [sessionStatus]);
+  const isSessionLoading = useMemo(() => sessionStatus === "loading", [sessionStatus]);
 
   const fetchRecords = useCallback(async () => {
     if (!session?.user) {
@@ -21,8 +24,10 @@ export default function Dashboard() {
     }
 
     try {
+      setAreRecordsLoading(true);
       const newRecordsData = await getRecords(session?.user?.id);
       setRecordsData(newRecordsData);
+      setAreRecordsLoading(false);
     } catch (error) {
       console.log('Error by records loading on client:' + error);
     }
@@ -36,14 +41,20 @@ export default function Dashboard() {
 
   return (
     <main className={styles.main}>
-      <MainMenu isLoggedIn={isLoggedIn} session={session} />
-      {isLoggedIn &&
-        <>
-          <CategorySelect defaultCategoryValue={'0'} isWithAll={true} />
-          <RecordsList user={session?.user} recordsData={recordsData} />
-          <RecordForm user={session?.user} fetchRecords={fetchRecords}  />
-        </>
-      }
-    </main>
+    {isSessionLoading ? (
+      <p>Loading...</p>
+    ) : (
+      <>
+        <MainMenu isLoggedIn={isLoggedIn} session={session} />
+        {isLoggedIn && (
+          <>
+            <CategorySelect defaultCategoryValue={'0'} isWithAll={true} />
+            <RecordsList user={session?.user} recordsData={recordsData} areRecordsLoading={areRecordsLoading} />
+            <RecordForm user={session?.user} fetchRecords={fetchRecords} />
+          </>
+        )}
+      </>
+    )}
+  </main>
   )
 }

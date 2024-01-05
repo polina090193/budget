@@ -7,8 +7,12 @@ import { useContext } from 'react';
 import styles from './RecordsList.module.css'
 
 export default function RecordsList(
-  { recordsData, user }:
-    { recordsData: BudgetRecords, user: NextAuthUser | undefined }
+  { recordsData, user, areRecordsLoading }:
+    {
+      recordsData: BudgetRecords,
+      user: NextAuthUser | undefined,
+      areRecordsLoading: boolean
+    }
 ) {
   const categoriesData = useContext(CategoriesContext);
 
@@ -40,6 +44,14 @@ export default function RecordsList(
 
   const getRowId: GridRowIdGetter<any> | undefined = (row) => {
     return row.record_id;
+  }
+
+  if (areRecordsLoading) {
+    return <p>Loading...</p>
+  }
+
+  if (!recordsData || recordsData.length === 0) {
+    return <p>No records found. Please add some.</p>
   }
 
   if (user) {
