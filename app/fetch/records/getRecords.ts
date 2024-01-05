@@ -1,14 +1,17 @@
-async function getRecords(userId?: string | undefined, categoryId?: number) {
+async function getRecords(userId?: string | undefined, page?: number, pageSize?: number, categoryId?: number) {
   if (!userId) {
     console.log('Error by records loading: user is not defined');
     return;
   }
+
+  let fetchURL = 'http://localhost:3000/api/records';
+  fetchURL += `?userId=${userId}`;
+  fetchURL += page ? `&page=${page}` : '';
+  fetchURL += pageSize ? `&pageSize=${pageSize}` : '';
+  fetchURL += categoryId ? `&categoryId=${categoryId}` : '';
   
   try {
-    const recordsRes = await fetch(
-      `http://localhost:3000/api/records?userId=${userId}${categoryId ? '&categoryId=' + categoryId : ''}`,
-      { cache: 'no-store' },
-    );
+    const recordsRes = await fetch(fetchURL, { cache: 'no-store' });
     
     const recordsData = await recordsRes.json();
 

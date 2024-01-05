@@ -16,15 +16,24 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
       status: 401,
     });
   }
+
+  const categoryId = searchParams?.get('categoryId') || null;
+  const page = searchParams?.get('page') || 1;
+  const pageSize = searchParams?.get('pageSize') || 10;
+  const offset = (Number(page) - 1) * Number(pageSize);
   
-  let recordsSQLQuery = `SELECT * FROM ${table_names.records} WHERE user_id = ?`;
+  const recordsSQLQuery = `
+  SELECT * 
+  FROM ${table_names.records} 
+  WHERE user_id = ? 
+  ${categoryId ? 'AND category_id = ?' : ''} 
+  ORDER BY date DESC 
+  LIMIT ${Number(pageSize)} OFFSET ${offset}
+  `;
 
   const params = [session.user.id];
-  const categoryId = searchParams?.get('categoryId') || null;
-
   if (categoryId) {
-    recordsSQLQuery += ' AND category_id = ?';
-    params.push(categoryId);
+    params.push(Number(categoryId));
   }
 
   const records = await query(recordsSQLQuery, params);
