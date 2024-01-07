@@ -14,25 +14,34 @@ export default function CategorySelect({
     inputRef?: RefObject<HTMLSelectElement>,
     isWithAll?: boolean,
   }) {
-  const categoriesData = useContext(CategoriesContext);
+  const categories = useContext(CategoriesContext);
 
-  const categoriesDataWithAll = [
+  const categoriesList = categories?.categoriesData ?? [];
+
+  const categoriesListWithAll = [
     {
       id: '0',
       name: 'All',
       slug: 'all',
       link: '/',
     },
-    ...categoriesData,
+    ...categoriesList,
   ]
 
   return (
-    <CustomSelect
-      inputRef={inputRef}
-      data={isWithAll ? categoriesDataWithAll : categoriesData}
-      defaultValue={defaultCategoryValue}
-      namePlural="categories"
-      nameSingular="category"
-    />
+    <>
+      {categories?.areCategoriesLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <CustomSelect
+          inputRef={inputRef}
+          data={isWithAll ? categoriesListWithAll : categoriesList}
+          defaultValue={defaultCategoryValue}
+          namePlural="categories"
+          nameSingular="category"
+        />
+      )
+      }
+    </>
   )
 }

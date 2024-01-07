@@ -1,3 +1,3 @@
-export const getCategoryNameById = (categoriesData: BudgetCategories, id: string) => (
-  categoriesData?.find(category => Number(category.id) === Number(id))?.name
+export const getCategoryNameById = (categoriesList: BudgetCategories, id: string) => (
+  categoriesList?.find(category => Number(category.id) === Number(id))?.name
 );

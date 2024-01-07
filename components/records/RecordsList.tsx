@@ -1,20 +1,26 @@
 'use client';
 
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
+import { RecordsContext } from '@/context-providers/RecordsProvider';
 import { getCategoryNameById } from '@/utils/getCategoryNameById';
-import { DataGrid, GridCellParams, GridColDef, GridRowIdGetter, GridRowParams, GridValueGetterParams } from '@mui/x-data-grid';
-import { useContext } from 'react';
+import { DataGrid, GridColDef, GridRowIdGetter, GridRowParams, GridValueGetterParams } from '@mui/x-data-grid';
+import { useContext, useEffect } from 'react';
 import styles from './RecordsList.module.css'
 
 export default function RecordsList(
-  { recordsData, user, areRecordsLoading }:
-    {
-      recordsData: BudgetRecords,
-      user: NextAuthUser | undefined,
-      areRecordsLoading: boolean
-    }
+  { session }: { session: any }
 ) {
-  const categoriesData = useContext(CategoriesContext);
+  const categories = useContext(CategoriesContext);
+  const categoriesList = categories?.categoriesData ?? [];
+
+  const records = useContext(RecordsContext);
+  const recordsList = records?.recordsData ?? [];
+  
+  useEffect(() => {
+    if (session) {
+      records?.fetchRecords();
+    }
+  }, [session]);
 
   const columns: GridColDef[] = [
     {
@@ -38,7 +44,7 @@ export default function RecordsList(
       field: 'category_id',
       headerName: 'Category',
       width: 130,
-      valueGetter: (params: GridValueGetterParams) => getCategoryNameById(categoriesData, params.row.category_id),
+      valueGetter: (params: GridValueGetterParams) => getCategoryNameById(categoriesList, params.row.category_id),
     },
   ];
 
@@ -46,20 +52,20 @@ export default function RecordsList(
     return row.record_id;
   }
 
-  if (areRecordsLoading) {
+  if (records?.areRecordsLoading) {
     return <p>Loading...</p>
   }
 
-  if (!recordsData || recordsData.length === 0) {
+  if (!recordsList || recordsList.length === 0) {
     return <p>No records found. Please add some.</p>
   }
 
-  if (user) {
+  if (session?.user) {
     return (
       <>
         <DataGrid
           getRowId={getRowId}
-          rows={recordsData}
+          rows={recordsList}
           columns={columns}
           initialState={{
             pagination: {

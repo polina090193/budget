@@ -12,14 +12,10 @@ import DateField from "../inputs/text/record/DateField";
 import DirectionField from "../inputs/text/record/DirectionField";
 import CategorySelect from "../inputs/select/CategorySelect";
 import { CategoriesContext } from "@/context-providers/CategoriesProvider";
+import { RecordsContext } from "@/context-providers/RecordsProvider";
 
-export default function RecordForm({
-  user,
-  fetchRecords,
-}: {
-  user: NextAuthUser | undefined,
-  fetchRecords: () => void,
-}) {
+export default function RecordForm({user}: {user: NextAuthUser | undefined}) {
+
   const titleRef = useRef<HTMLInputElement>(null);
   const sumRef = useRef<HTMLInputElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
@@ -27,9 +23,13 @@ export default function RecordForm({
   const categoryRef = useRef<HTMLSelectElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const categoriesData = useContext(CategoriesContext);
+  const categories = useContext(CategoriesContext);
+  const categoriesList = categories?.categoriesData ?? [];
 
-  const firstCategoryValue = useMemo(() => categoriesData[0]?.id ?? '', [categoriesData]);
+  const firstCategoryValue = useMemo(() => categoriesList[0]?.id ?? '', [categoriesList]);
+
+  const records = useContext(RecordsContext);
+  const fetchRecords = records?.fetchRecords ?? (() => {});
 
   const [toastState, setToastState] = useState<ToastProps>({
     open: false,

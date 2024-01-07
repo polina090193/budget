@@ -8,10 +8,9 @@ import { authOptions } from '../auth/[...nextauth]/route';
 export async function GET(req: NextRequest, res: NextApiResponse) {
   const { searchParams } = new URL(req.url);
   
-  const userId = searchParams?.get('userId') || null;
   const session = await getServerSession(authOptions);
   
-  if (!session || !userId || Number(session.user.id) !== Number(userId)) {
+  if (!session?.user?.id) {
     return new Response("Authorization error.", {
       status: 401,
     });

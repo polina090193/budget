@@ -1,11 +1,5 @@
-async function getRecords(userId?: string | undefined, page?: number, pageSize?: number, categoryId?: number) {
-  if (!userId) {
-    console.log('Error by records loading: user is not defined');
-    return;
-  }
-
+async function getRecords(page?: number, pageSize?: number, categoryId?: number) {
   let fetchURL = 'http://localhost:3000/api/records';
-  fetchURL += `?userId=${userId}`;
   fetchURL += page ? `&page=${page}` : '';
   fetchURL += pageSize ? `&pageSize=${pageSize}` : '';
   fetchURL += categoryId ? `&categoryId=${categoryId}` : '';

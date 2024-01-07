@@ -1,10 +1,22 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { query } from "@/db";
 import { table_names } from "@/db/table_names";
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]/route';
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const categories = await query(`SELECT * FROM ${table_names.categories}`, []);
+export async function GET(req: NextRequest, res: NextResponse) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id) {
+    return new Response("Authorization error.", {
+      status: 401,
+    });
+  }
+
+  const categories = await query(`
+  SELECT * FROM ${table_names.categories}
+  WHERE user_id = ?
+  `, [session.user.id]);
 
   if (!categories) {
     return new Response("Request failed", {
