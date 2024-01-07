@@ -1,6 +1,9 @@
-async function getRecords(page?: number, pageSize?: number, categoryId?: number) {
+async function getRecords(page?: number, pageSize?: number, categoryId?: number): Promise<{
+  records: BudgetRecords;
+  total: number;
+} | undefined> {
   let fetchURL = 'http://localhost:3000/api/records';
-  fetchURL += page ? `&page=${page}` : '';
+  fetchURL += page ? `?page=${page}` : '';
   fetchURL += pageSize ? `&pageSize=${pageSize}` : '';
   fetchURL += categoryId ? `&categoryId=${categoryId}` : '';
   
@@ -9,16 +12,20 @@ async function getRecords(page?: number, pageSize?: number, categoryId?: number)
     
     const recordsData = await recordsRes.json();
 
-    const recordsDataProcessed = recordsData.map((record: BudgetRecord) => ({
+    const recordsList = recordsData.records;
+
+    const totalRecords = recordsData.total;
+
+    const recordsDataProcessed = recordsList.map((record: BudgetRecord) => ({
       ...record,
       id: record.record_id,
       date: new Date(record.date).toLocaleDateString('de-DE'),
     }));
 
-    return recordsDataProcessed || [];
+    return {records: recordsDataProcessed || [], total: totalRecords || 0};
   } catch (error) {
     console.log('Error by records loading:' + error);
-    return [];
+    return;
   }
 }
 

@@ -7,24 +7,27 @@ import getRecords from "../app/fetch/records/getRecords";
 export const RecordsContext = createContext<{
   recordsData: BudgetRecords,
   areRecordsLoading: boolean,
-  fetchRecords: () => void
+  fetchRecords: (page?: number, pageSize?: number) => void,
+  total: number,
 } | null>(null);
 
 const RecordsProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = useSession();
   const [recordsData, setRecordsData] = useState<BudgetRecords>([]);
   const [areRecordsLoading, setAreRecordsLoading] = useState(false);
+  const [total, setTotal] = useState(0);
 
-  const fetchRecords = useCallback(async () => {
+  const fetchRecords = useCallback(async (page?: number, pageSize?: number) => {
     setAreRecordsLoading(true);
     if (!session?.user) {
-      console.log('Error by records loading on client: user is not defined');
       return;
     }
 
     try {
-      const newRecordsData = await getRecords();
-      setRecordsData(newRecordsData);
+      const newRecordsData = await getRecords(page || 1, pageSize || 10);
+      const newRecordsList = newRecordsData?.records || [];
+      setRecordsData(newRecordsList);
+      setTotal(newRecordsData?.total || 0);
     } catch (error) {
       console.log('Error by records loading on client:' + error);
     }
@@ -36,7 +39,7 @@ const RecordsProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <RecordsContext.Provider value={{recordsData, areRecordsLoading, fetchRecords}}>{children}</RecordsContext.Provider>
+    <RecordsContext.Provider value={{recordsData, areRecordsLoading, fetchRecords, total}}>{children}</RecordsContext.Provider>
   );
 }
 

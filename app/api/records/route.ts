@@ -17,7 +17,7 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
   }
 
   const categoryId = searchParams?.get('categoryId') || null;
-  const page = searchParams?.get('page') || 1;
+  const page = searchParams?.get('page') || 0;
   const pageSize = searchParams?.get('pageSize') || 10;
   const offset = (Number(page) - 1) * Number(pageSize);
   
@@ -36,14 +36,19 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
   }
 
   const records = await query(recordsSQLQuery, params);
-
+  
   if (!records) {
     return new Response("Request failed", {
       status: 500,
     });
   }
 
-  return NextResponse.json(records, {
+  const totalRecords = await query(`
+  SELECT COUNT(*) FROM ${table_names.records} WHERE user_id = ?
+  `, [session.user.id]) as {'COUNT(*)': number}[];
+  
+
+  return NextResponse.json({records, total: totalRecords[0]['COUNT(*)']}, {
     status: 200,
   });
 }

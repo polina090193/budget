@@ -3,8 +3,14 @@
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import { RecordsContext } from '@/context-providers/RecordsProvider';
 import { getCategoryNameById } from '@/utils/getCategoryNameById';
-import { DataGrid, GridColDef, GridRowIdGetter, GridRowParams, GridValueGetterParams } from '@mui/x-data-grid';
-import { useContext, useEffect } from 'react';
+import {
+  DataGrid,
+  GridColDef,
+  GridRowIdGetter,
+  GridRowParams,
+  GridValueGetterParams,
+} from '@mui/x-data-grid';
+import { useContext, useEffect, useState } from 'react';
 import styles from './RecordsList.module.css'
 
 export default function RecordsList(
@@ -15,12 +21,18 @@ export default function RecordsList(
 
   const records = useContext(RecordsContext);
   const recordsList = records?.recordsData ?? [];
+  const areRecordsLoading = records?.areRecordsLoading ?? false;
+
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: 10,
+    page: 0,
+  });
   
   useEffect(() => {
     if (session) {
-      records?.fetchRecords();
+      records?.fetchRecords(paginationModel.page + 1, paginationModel.pageSize);
     }
-  }, [session]);
+  }, [session, paginationModel]);
 
   const columns: GridColDef[] = [
     {
@@ -52,7 +64,7 @@ export default function RecordsList(
     return row.record_id;
   }
 
-  if (records?.areRecordsLoading) {
+  if (areRecordsLoading) {
     return <p>Loading...</p>
   }
 
@@ -65,13 +77,12 @@ export default function RecordsList(
       <>
         <DataGrid
           getRowId={getRowId}
+          rowCount={!areRecordsLoading && records ? records.total : 0}
           rows={recordsList}
           columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 10 },
-            },
-          }}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          paginationMode="server"
           getRowClassName={(params: GridRowParams<any>) => {
             if (params.row.direction === 'MINUS') {
               return styles.expenseRow;
@@ -79,7 +90,7 @@ export default function RecordsList(
             return styles.incomeRow;
           }}
           pageSizeOptions={[10, 20, 50]}
-          checkboxSelection
+          // checkboxSelection
         />
       </>
     )
