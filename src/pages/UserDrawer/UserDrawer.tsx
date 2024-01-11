@@ -2,7 +2,7 @@
 
 import { Button, Drawer } from '@mui/material';
 import styles from './UserDrawer.module.scss'
-import AuthForm from '../forms/AuthForm';
+import AuthForm from './AuthForm/AuthForm';
 import { signOut } from "next-auth/react"
 
 interface UserDrawerProps {

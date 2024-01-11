@@ -27,12 +27,16 @@ export default function RecordsList(
     pageSize: 10,
     page: 0,
   });
-  
+
   useEffect(() => {
     if (session) {
       records?.fetchRecords(paginationModel.page + 1, paginationModel.pageSize);
     }
   }, [session, paginationModel]);
+
+  const updateRecord = (recordId: GridRowIdGetter) => () => {
+    
+  }
 
   const columns: GridColDef[] = [
     {
@@ -57,6 +61,17 @@ export default function RecordsList(
       headerName: 'Category',
       width: 130,
       valueGetter: (params: GridValueGetterParams) => getCategoryNameById(categoriesList, params.row.category_id),
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      renderCell: (params) => (
+        <div>
+          <button onClick={updateRecord(params.row.record_id)}>Edit</button>
+          <button>Delete</button>
+        </div>
+      ),
     },
   ];
 
@@ -90,7 +105,7 @@ export default function RecordsList(
             return styles.incomeRow;
           }}
           pageSizeOptions={[10, 20, 50]}
-          // checkboxSelection
+        // checkboxSelection
         />
       </>
     )

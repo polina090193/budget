@@ -1,13 +1,12 @@
 "use client"
 
-import styles from './MainPage.module.css'
-import MainMenu from '@/components/navigation/MainMenu';
-import CategorySelect from '@/components/inputs/select/CategorySelect';
-import RecordsList from '@/components/records/RecordsList';
 import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import RecordForm from '@/components/forms/RecordForm';
-import getRecords from '@/app/fetch/records/getRecords';
+import { useMemo } from 'react';
+import RecordModal from '../RecordFormModal/index';
+import styles from './assets/MainPage.module.css';
+import CategorySelect from './CategorySelect';
+import MainMenu from './MainMenu';
+import RecordsList from './RecordsList';
 
 export default function Dashboard() {
   const { data: session, status: sessionStatus } = useSession();
@@ -26,7 +25,7 @@ export default function Dashboard() {
           <>
             <CategorySelect defaultCategoryValue={'0'} isWithAll={true} />
             <RecordsList session={session} />
-            <RecordForm user={session?.user} />
+            <RecordModal user={session?.user}  />
           </>
         )}
       </>

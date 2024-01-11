@@ -5,10 +5,10 @@ import { useRef, useCallback, useState, useEffect } from "react";
 import { validateEmail } from "@/utils/validation/validateEmail";
 import { validatePassword } from "@/utils/validation/validatePassword";
 
-import CustomSnackbar from "../info/CustomSnackbar";
-import EmailField from "../inputs/text/auth/EmailField";
-import NameField from "../inputs/text/auth/NameField";
-import PasswordField from "../inputs/text/auth/PasswordField";
+import CustomSnackbar from "../../../components/info/CustomSnackbar";
+import EmailField from "./inputs/EmailField";
+import NameField from "../../../components/inputs/text/auth/NameField";
+import PasswordField from "../../../components/inputs/text/auth/PasswordField";
 
 import styles from './AuthForm.module.css';
 import { signIn } from "next-auth/react";

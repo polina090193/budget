@@ -2,7 +2,7 @@
 
 import { RefObject, useContext } from 'react';
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
-import CustomSelect from './CustomSelectWithLinks';
+import CustomSelect from '../../components/inputs/select/CustomSelectWithLinks';
 
 export default function CategorySelect({
   defaultCategoryValue,

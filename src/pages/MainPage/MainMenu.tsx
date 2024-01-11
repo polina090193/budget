@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import { Button } from '@mui/material';
 import styles from './MainMenu.module.css'
-import UserDrawer from './UserDrawer';
+import UserDrawer from '../UserDrawer/UserDrawer';
 import { Session } from 'next-auth';
 
 export default function MainMenu(

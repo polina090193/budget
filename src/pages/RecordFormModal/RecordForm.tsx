@@ -2,15 +2,15 @@
 
 import { useRef, useCallback, useState, useMemo, useContext } from "react";
 
-import CustomSnackbar from "../info/CustomSnackbar";
+import CustomSnackbar from "../../components/info/CustomSnackbar";
 
 import styles from './AuthForm.module.css';
-import TitleField from "../inputs/text/record/TitleField";
-import SumField from "../inputs/text/record/SumField";
+import TitleField from "./inputs/TitleField";
+import SumField from "./inputs/SumField";
 import { dateSQLadapter } from "@/utils/adapters/dateSQLadapter";
-import DateField from "../inputs/text/record/DateField";
-import DirectionField from "../inputs/text/record/DirectionField";
-import CategorySelect from "../inputs/select/CategorySelect";
+import DateField from "./inputs/DateField";
+import DirectionField from "./inputs/DirectionField";
+import CategorySelect from "../MainPage/CategorySelect";
 import { CategoriesContext } from "@/context-providers/CategoriesProvider";
 import { RecordsContext } from "@/context-providers/RecordsProvider";
 
