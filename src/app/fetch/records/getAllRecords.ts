@@ -1,4 +1,4 @@
-async function getRecords(page?: number, pageSize?: number, categoryId?: number): Promise<{
+async function getAllRecords(page?: number, pageSize?: number, categoryId?: number): Promise<{
   records: BudgetRecords;
   total: number;
 } | undefined> {
@@ -29,4 +29,4 @@ async function getRecords(page?: number, pageSize?: number, categoryId?: number)
   }
 }
 
-export default getRecords;
+export default getAllRecords;

@@ -1,13 +1,20 @@
 "use client";
-import { RefObject } from 'react';
 import { TextField } from '@mui/material';
+import { FieldAttributes, FormikProps, FormikSharedConfig } from 'formik';
+import { useEffect } from 'react';
 
-export default function TitleField({ inputRef }: { inputRef: RefObject<HTMLInputElement>} ) {
+export default function TitleField({
+  field,
+  ...props
+}: FormikProps<FormikSharedConfig> & {
+  field: FieldAttributes<any>,
+}) {
   return (
     <TextField
-      inputRef={inputRef}
       id="title-field"
       label="Title"
+      {...field}
+      {...props}
     />
   )
 }

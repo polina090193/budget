@@ -7,10 +7,10 @@ import { validatePassword } from "@/utils/validation/validatePassword";
 
 import CustomSnackbar from "../../../components/info/CustomSnackbar";
 import EmailField from "./inputs/EmailField";
-import NameField from "../../../components/inputs/text/auth/NameField";
-import PasswordField from "../../../components/inputs/text/auth/PasswordField";
+import NameField from "./inputs/NameField";
+import PasswordField from "./inputs/PasswordField";
 
-import styles from './AuthForm.module.css';
+import styles from './assets/AuthForm.module.css';
 import { signIn } from "next-auth/react";
 import { hashPassword } from "@/utils/auth/hashPassword";
 

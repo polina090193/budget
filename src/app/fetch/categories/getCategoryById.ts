@@ -1,6 +1,6 @@
 export async function getCategoryById(id: number) {
   try {
-    const categoryRes = await fetch(`http://localhost:3000/api/category/${id}`);
+    const categoryRes = await fetch(`http://localhost:3000/api/categories/${id}`);
     const categoryData = await categoryRes.json();
 
     const categoryDataProcessed = {

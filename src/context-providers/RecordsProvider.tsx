@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { createContext, useCallback, useEffect, useState } from "react";
-import getRecords from "../app/fetch/records/getRecords";
+import getAllRecords from "../app/fetch/records/getAllRecords";
 
 export const RecordsContext = createContext<{
   recordsData: BudgetRecords,
@@ -24,7 +24,7 @@ const RecordsProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     try {
-      const newRecordsData = await getRecords(page || 1, pageSize || 10);
+      const newRecordsData = await getAllRecords(page || 1, pageSize || 10);
       const newRecordsList = newRecordsData?.records || [];
       setRecordsData(newRecordsList);
       setTotal(newRecordsData?.total || 0);

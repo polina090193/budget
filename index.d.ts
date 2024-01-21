@@ -4,7 +4,7 @@ declare interface BudgetRecord {
     title: string;
     direction: 'PLUS' | 'MINUS';
     sum: number;
-    category: number;
+    category_id: number;
     user_id: number;
 }
 

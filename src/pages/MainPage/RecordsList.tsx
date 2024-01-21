@@ -11,10 +11,18 @@ import {
   GridValueGetterParams,
 } from '@mui/x-data-grid';
 import { useContext, useEffect, useState } from 'react';
-import styles from './RecordsList.module.css'
+import styles from './assets/RecordsList.module.css'
 
 export default function RecordsList(
-  { session }: { session: any }
+  {
+    session,
+    setShowRecordFormModal,
+    setSelectedRecordId,
+  }: {
+    session: any,
+    setShowRecordFormModal: (value: boolean) => void,
+    setSelectedRecordId: (value: GridRowIdGetter) => void,
+  }
 ) {
   const categories = useContext(CategoriesContext);
   const categoriesList = categories?.categoriesData ?? [];
@@ -35,7 +43,8 @@ export default function RecordsList(
   }, [session, paginationModel]);
 
   const updateRecord = (recordId: GridRowIdGetter) => () => {
-    
+    setShowRecordFormModal(true);
+    setSelectedRecordId(recordId);
   }
 
   const columns: GridColDef[] = [

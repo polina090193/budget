@@ -4,9 +4,9 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { date, title, direction, sum, category, user_id } = body;
+  const { date, title, direction, sum, category_id, user_id } = body;
 
-  const valuesArr = [title, direction, sum, category, user_id];
+  const valuesArr = [title, direction, sum, category_id, user_id];
   if (date) {
     valuesArr.unshift(date);
   }

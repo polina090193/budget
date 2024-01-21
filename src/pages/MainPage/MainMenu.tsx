@@ -2,8 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import { Button } from '@mui/material';
-import styles from './MainMenu.module.css'
-import UserDrawer from '../UserDrawer/UserDrawer';
+import styles from './assets//MainMenu.module.css'
+import UserDrawer from '../UserDrawer/index';
 import { Session } from 'next-auth';
 
 export default function MainMenu(

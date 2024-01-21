@@ -1,7 +1,7 @@
 "use client"
 
 import { Button, Drawer } from '@mui/material';
-import styles from './UserDrawer.module.scss'
+import styles from './assets/UserDrawer.module.scss'
 import AuthForm from './AuthForm/AuthForm';
 import { signOut } from "next-auth/react"
 

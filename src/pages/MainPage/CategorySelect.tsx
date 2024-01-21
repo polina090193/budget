@@ -1,24 +1,26 @@
 "use client";
 
-import { RefObject, useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import CustomSelect from '../../components/inputs/select/CustomSelectWithLinks';
+import { FieldAttributes, FormikProps, FormikSharedConfig, useFormikContext } from 'formik';
+import { SelectChangeEvent } from '@mui/material';
 
 export default function CategorySelect({
-  defaultCategoryValue,
-  inputRef,
+  field,
+  defaultValue,
   isWithAll,
-}:
-  {
-    defaultCategoryValue: string,
-    inputRef?: RefObject<HTMLSelectElement>,
-    isWithAll?: boolean,
-  }) {
+  ...props
+}: FormikProps<FormikSharedConfig> & {
+  field: FieldAttributes<any>,
+  defaultValue: number,
+  isWithAll?: boolean,
+}) {
   const categories = useContext(CategoriesContext);
 
   const categoriesList = categories?.categoriesData ?? [];
 
-  const categoriesListWithAll = [
+  const categoriesListWithAll = useMemo(() => ([
     {
       id: '0',
       name: 'All',
@@ -26,7 +28,9 @@ export default function CategorySelect({
       link: '/',
     },
     ...categoriesList,
-  ]
+  ]), [categoriesList]);
+
+  const { setFieldValue } = useFormikContext();
 
   return (
     <>
@@ -34,11 +38,14 @@ export default function CategorySelect({
         <p>Loading...</p>
       ) : (
         <CustomSelect
-          inputRef={inputRef}
+          value={field.value}
+          onChangeFormik={(event: SelectChangeEvent<number>) => setFieldValue(field.name, event.target.value)}
           data={isWithAll ? categoriesListWithAll : categoriesList}
-          defaultValue={defaultCategoryValue}
+          defaultValue={defaultValue}
           namePlural="categories"
           nameSingular="category"
+          {...field}
+          {...props}
         />
       )
       }
