@@ -29,6 +29,7 @@ export default function RecordsList(
 
   const records = useContext(RecordsContext);
   const recordsList = records?.recordsData ?? [];
+  const fetchRecords = records?.fetchRecords ?? (() => { });
   const areRecordsLoading = records?.areRecordsLoading ?? false;
 
   const [paginationModel, setPaginationModel] = useState({
@@ -45,6 +46,19 @@ export default function RecordsList(
   const updateRecord = (recordId: GridRowIdGetter) => () => {
     setShowRecordFormModal(true);
     setSelectedRecordId(recordId);
+  }
+
+  const deleteRecord = (recordId: GridRowIdGetter) => async () => {
+    await fetch(
+      'http://localhost:3000/api/records/delete',
+      {
+        method: 'DELETE',
+        body: JSON.stringify({
+          record_id: recordId,
+        })
+      }
+    );
+    await fetchRecords();
   }
 
   const columns: GridColDef[] = [
@@ -78,7 +92,7 @@ export default function RecordsList(
       renderCell: (params) => (
         <div>
           <button onClick={updateRecord(params.row.record_id)}>Edit</button>
-          <button>Delete</button>
+          <button onClick={deleteRecord(params.row.record_id)}>Delete</button>
         </div>
       ),
     },
