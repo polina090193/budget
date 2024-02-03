@@ -48,7 +48,13 @@ export default function RecordsList(
     setSelectedRecordId(recordId);
   }
 
-  const deleteRecord = (recordId: GridRowIdGetter) => async () => {
+  const showConfirmDeleteModal = (recordId: GridRowIdGetter) => () => {
+    if (window.confirm('Are you sure you want to delete this record?')) {
+      deleteRecord(recordId);
+    }
+  }
+
+  const deleteRecord = async (recordId: GridRowIdGetter) => {
     await fetch(
       'http://localhost:3000/api/records/delete',
       {
@@ -92,7 +98,7 @@ export default function RecordsList(
       renderCell: (params) => (
         <div>
           <button onClick={updateRecord(params.row.record_id)}>Edit</button>
-          <button onClick={deleteRecord(params.row.record_id)}>Delete</button>
+          <button onClick={showConfirmDeleteModal(params.row.record_id)}>Delete</button>
         </div>
       ),
     },
