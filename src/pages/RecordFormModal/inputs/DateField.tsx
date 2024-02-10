@@ -6,8 +6,7 @@ import { FieldAttributes, FormikProps, FormikSharedConfig, useFormikContext } fr
 import dayjs from 'dayjs';
 
 export default function DateField({
-  field,
-  ...props
+  field
 }: FormikProps<FormikSharedConfig> & {
   field: FieldAttributes<any>
 }) {

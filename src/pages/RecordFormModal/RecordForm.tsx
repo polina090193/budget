@@ -17,6 +17,7 @@ import DirectionField from "./inputs/DirectionField";
 import CategorySelect from "../MainPage/CategorySelect";
 
 import { dateSQLadapter } from "@/utils/adapters/dateSQLadapter";
+import { isPressedKeyNumeric } from "@/utils/validation/isPressedKeyNumeric";
 
 export default function RecordForm({
   user,
@@ -142,7 +143,13 @@ export default function RecordForm({
           <Form>
             <Field name="title" placeholder="Title" component={TitleField} />
             <Field name="direction" placeholder="Direction" component={DirectionField} />
-            <Field name="sum" placeholder="Sum" component={SumField} />
+            <Field name="sum" onKeyDown={
+              (event: React.KeyboardEvent<HTMLInputElement>) => {
+                if (!isPressedKeyNumeric(event.key)) {
+                  event.preventDefault();
+                }
+              }}
+              placeholder="Sum" component={SumField} />
             <Field name="date" placeholder="Date" component={DateField} />
             <Field name="category_id" placeholder="Category" component={CategorySelect} defaultValue={props.values.category_id} />
             <Button type="submit">{selectedRecordId ? 'Update' : 'Create'}</Button>

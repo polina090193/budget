@@ -8,18 +8,6 @@ export default function SumField({
 }: FormikProps<FormikSharedConfig> & {
   field: FieldAttributes<any>,
 }) {
-  // TODO Validation/Mask here
-
-  // const checkForOnlyNumerics = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const input = event.target.value;
-
-  //   const numericInput = input.replace(/[^0-9]/g, '');
-
-  //   if (inputRef.current) {
-  //     inputRef.current.value = numericInput;
-  //   }
-  // };
-
   return (
     <TextField
       inputProps={{ inputMode: 'numeric' }}
