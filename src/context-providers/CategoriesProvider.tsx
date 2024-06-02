@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { createContext, useCallback, useEffect, useState } from "react";
 import getAllCategories from "../app/fetch/categories/getAllCategories";
 
-export const CategoriesContext = createContext<{ categoriesData: BudgetCategories, areCategoriesLoading: boolean } | null>(null);
+export const CategoriesContext = createContext<{ categoriesData: BudgetCategories, areCategoriesLoading: boolean, fetchCategories: () => void } | null>(null);
 
 const CategoriesProvider = ({ children }: { children: React.ReactNode }) => {
   const [categoriesData, setCategoriesData] = useState<BudgetCategories>([]);
@@ -27,7 +27,7 @@ const CategoriesProvider = ({ children }: { children: React.ReactNode }) => {
   }, [fetchCategories]);
 
   return (
-    <CategoriesContext.Provider value={{ categoriesData, areCategoriesLoading }}>{children}</CategoriesContext.Provider>
+    <CategoriesContext.Provider value={{ categoriesData, areCategoriesLoading, fetchCategories }}>{children}</CategoriesContext.Provider>
   );
 }
 

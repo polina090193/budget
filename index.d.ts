@@ -8,7 +8,7 @@ declare interface BudgetRecord {
     user_id: number;
 }
 
-declare interface BudgetRecordReq extends Omit<BudgetRecordRes, 'record_id'> {}
+declare interface BudgetRecordReq extends Omit<BudgetRecord, 'record_id'> {}
 
 declare type BudgetRecords = (BudgetRecord | BudgetRecordReq)[]
 
@@ -18,19 +18,18 @@ declare interface BudgetRecordsWithUpdate {
 }
 
 declare interface SelectValue {
-    id: string;
+    id: number;
     name: string;
-    slug: string;
 }
 
-declare interface BudgetCategoryRes extends Omit<SelectValue, 'id'> {
+declare interface BudgetCategory {
     category_id: number;
-    link?: string;
+    name: string;
+    direction: 'PLUS' | 'MINUS';
+    user_id: number;
 }
 
-declare interface BudgetCategory extends Omit<BudgetCategoryRes, 'category_id'> {
-    id: string;
-}
+declare interface BudgetCategoryReq extends Omit<BudgetCategory, 'category_id'> {}
 
 declare type BudgetCategories = BudgetCategory[]
 

@@ -4,9 +4,9 @@ import { Button } from '@mui/material';
 import { GridRowIdGetter } from '@mui/x-data-grid';
 import { useSession } from 'next-auth/react';
 import { useMemo, useState } from 'react';
-import RecordModal from '../RecordFormModal/RecordFormModal';
+import RecordFormModal from '../FormModal/RecordForm/RecordFormModal';
 import styles from './assets/MainPage.module.css';
-// import CategorySelect from './CategorySelect';
+import CategorySelect from './CategorySelect';
 import MainMenu from './MainMenu';
 import RecordsList from './RecordsList';
 
@@ -18,6 +18,7 @@ export default function MainPage() {
 
   const [showRecordFormModal, setShowRecordFormModal] = useState(false);
   const [ selectedRecordId, setSelectedRecordId ] = useState<GridRowIdGetter | null>(null);
+  const [ selectedCategoryId, setSelectedCategoryId ] = useState<number | undefined>(undefined);
 
   return (
     <main className={styles.main}>
@@ -28,7 +29,15 @@ export default function MainPage() {
           <MainMenu isLoggedIn={isLoggedIn} session={session} />
           {isLoggedIn && (
             <>
-              {/* <CategorySelect defaultCategoryValue={'0'} isWithAll={true} /> */}
+              <CategorySelect
+                defaultValue={0}
+                isWithAll={true}
+                onCategoryChange={
+                  (value: number) => {
+                    setSelectedCategoryId(value);
+                  }
+                }
+              />
               <Button type='button' onClick={() => setShowRecordFormModal(true)}>
                 Create record
               </Button>
@@ -36,8 +45,9 @@ export default function MainPage() {
                 session={session}
                 setShowRecordFormModal={setShowRecordFormModal}
                 setSelectedRecordId={setSelectedRecordId}
+                selectedCategoryId={selectedCategoryId}
               />
-              <RecordModal
+              <RecordFormModal
                 user={session?.user}
                 showRecordFormModal={showRecordFormModal}
                 setShowRecordFormModal={setShowRecordFormModal}

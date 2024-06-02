@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { query } from "@/db";
 import { table_names } from "@/db/table_names";
 import { compareSync } from 'bcryptjs';
-import { AdapterUser } from 'next-auth/adapters';
 import { JWT } from 'next-auth/jwt';
 
 export const authOptions = {

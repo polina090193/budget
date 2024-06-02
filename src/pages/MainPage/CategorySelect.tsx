@@ -1,36 +1,45 @@
 "use client";
 
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
-import CustomSelect from '../../components/inputs/select/CustomSelectWithLinks';
-import { FieldAttributes, FormikProps, FormikSharedConfig, useFormikContext } from 'formik';
+import CustomSelect from '../../components/inputs/select/CustomSelect';
+import { FieldAttributes, FormikProps, FormikSharedConfig } from 'formik';
 import { SelectChangeEvent } from '@mui/material';
 
 export default function CategorySelect({
   field,
   defaultValue,
   isWithAll,
+  onCategoryChange,
   ...props
-}: FormikProps<FormikSharedConfig> & {
-  field: FieldAttributes<any>,
-  defaultValue: number,
+}: (FormikProps<FormikSharedConfig> | {}) & {
+  field?: FieldAttributes<any>,
+  defaultValue?: number,
   isWithAll?: boolean,
+  onCategoryChange?: (value: number) => void
 }) {
   const categories = useContext(CategoriesContext);
 
-  const categoriesList = categories?.categoriesData ?? [];
+  const categoriesList = useMemo(() => (
+    categories?.categoriesData.map((item) => ({...item, id: item.category_id})) ?? []
+  ), [categories?.categoriesData]);
+
+  const [categoryValue, setCategoryValue] = useState<number | undefined>(0);
 
   const categoriesListWithAll = useMemo(() => ([
     {
-      id: '0',
+      id: 0,
       name: 'All',
-      slug: 'all',
-      link: '/',
     },
     ...categoriesList,
   ]), [categoriesList]);
 
-  const { setFieldValue } = useFormikContext();
+  const handleCategoryChange = (event: SelectChangeEvent<number>) => {
+    const numVal = Number(event.target.value);
+    
+    setCategoryValue(numVal);
+    onCategoryChange && onCategoryChange(numVal);
+  };
 
   return (
     <>
@@ -38,13 +47,12 @@ export default function CategorySelect({
         <p>Loading...</p>
       ) : (
         <CustomSelect
-          value={field.value}
-          onChangeFormik={(event: SelectChangeEvent<number>) => setFieldValue(field.name, event.target.value)}
+          value={categoryValue || defaultValue}
+          onChange={handleCategoryChange}
           data={isWithAll ? categoriesListWithAll : categoriesList}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue || 0}
           namePlural="categories"
           nameSingular="category"
-          {...field}
           {...props}
         />
       )

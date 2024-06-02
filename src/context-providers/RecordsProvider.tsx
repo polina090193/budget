@@ -7,7 +7,7 @@ import getAllRecords from "../app/fetch/records/getAllRecords";
 export const RecordsContext = createContext<{
   recordsData: BudgetRecords,
   areRecordsLoading: boolean,
-  fetchRecords: (page?: number, pageSize?: number) => void,
+  fetchRecords: (page?: number, pageSize?: number, categoryId?: number) => void,
   total: number,
 } | null>(null);
 
@@ -17,14 +17,14 @@ const RecordsProvider = ({ children }: { children: React.ReactNode }) => {
   const [areRecordsLoading, setAreRecordsLoading] = useState(false);
   const [total, setTotal] = useState(0);
 
-  const fetchRecords = useCallback(async (page?: number, pageSize?: number) => {
+  const fetchRecords = useCallback(async (page?: number, pageSize?: number, categoryId?: number) => {
     setAreRecordsLoading(true);
     if (!session?.user) {
       return;
     }
 
     try {
-      const newRecordsData = await getAllRecords(page || 1, pageSize || 10);
+      const newRecordsData = await getAllRecords(page || 1, pageSize || 10, categoryId || undefined);
       const newRecordsList = newRecordsData?.records || [];
       setRecordsData(newRecordsList);
       setTotal(newRecordsData?.total || 0);

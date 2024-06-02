@@ -18,10 +18,12 @@ export default function RecordsList(
     session,
     setShowRecordFormModal,
     setSelectedRecordId,
+    selectedCategoryId,
   }: {
     session: any,
     setShowRecordFormModal: (value: boolean) => void,
     setSelectedRecordId: (value: GridRowIdGetter) => void,
+    selectedCategoryId?: number,
   }
 ) {
   const categories = useContext(CategoriesContext);
@@ -39,9 +41,9 @@ export default function RecordsList(
 
   useEffect(() => {
     if (session) {
-      records?.fetchRecords(paginationModel.page + 1, paginationModel.pageSize);
+      records?.fetchRecords(paginationModel.page + 1, paginationModel.pageSize, selectedCategoryId);
     }
-  }, [session, paginationModel]);
+  }, [session, paginationModel, selectedCategoryId]);
 
   const updateRecord = (recordId: GridRowIdGetter) => () => {
     setShowRecordFormModal(true);

@@ -8,44 +8,36 @@ import { Button } from "@mui/material";
 // import CustomSnackbar from "../../components/info/CustomSnackbar";
 
 import { CategoriesContext } from "@/context-providers/CategoriesProvider";
-import { RecordsContext } from "@/context-providers/RecordsProvider";
 
-import TitleField from "./inputs/TitleField";
-import SumField from "./inputs/SumField";
-import DateField from "./inputs/DateField";
-import DirectionField from "./inputs/DirectionField";
-import CategorySelect from "../MainPage/CategorySelect";
+import TitleField from "../inputs/TitleField";
+import SumField from "../inputs/SumField";
+import DateField from "../inputs/DateField";
+import DirectionField from "../inputs/DirectionField";
+import CategorySelect from "../../MainPage/CategorySelect";
 
-import { dateSQLadapter } from "@/utils/adapters/dateSQLadapter";
 import { isPressedKeyNumeric } from "@/utils/validation/isPressedKeyNumeric";
 
-export default function RecordForm({
+export default function CategoryForm({
   user,
-  selectedRecordId,
+  selectedCategoryId,
   closeForm,
 }: {
   user: NextAuthUser | undefined,
-  selectedRecordId?: GridRowIdGetter | null,
+  selectedCategoryId?: GridRowIdGetter | null,
   closeForm: () => void,
 }) {
 
   const categories = useContext(CategoriesContext);
-  const categoriesList = categories?.categoriesData ?? [];
+  const fetchCategories = categories?.fetchCategories ?? (() => { });
 
-  const records = useContext(RecordsContext);
-  const fetchRecords = records?.fetchRecords ?? (() => { });
-
-  const emptyRecord = useMemo(() => ({
-    record_id: 0,
-    title: '',
-    sum: 0,
-    date: '',
+  const emptyCategory = useMemo(() => ({
+    category_id: 0,
+    name: '',
     direction: 'MINUS',
-    category_id: Number(categoriesList[0]?.id) || 0,
     user_id: Number(user?.id),
-  }), [user, categoriesList]) as BudgetRecord;
+  }), [user]) as BudgetCategory;
 
-  const [currentRecord, setCurrentRecord] = useState<BudgetRecord>(emptyRecord)
+  const [currentCategory, setCurrentCategory] = useState<BudgetCategoryReq>(emptyCategory)
 
   // TODO: Implement toasts
   // const [toastState, setToastState] = useState<ToastProps>({
@@ -70,62 +62,58 @@ export default function RecordForm({
   //   });
   // }, []);
 
-  const getRecord = useCallback(async () => {
-    if (!selectedRecordId) {
-      return emptyRecord;
+  const getCategory = useCallback(async () => {
+    if (!selectedCategoryId) {
+      return emptyCategory;
     }
 
-    const recordRes = await fetch(`http://localhost:3000/api/records/${selectedRecordId}`);
-    if (!recordRes.ok) {
+    const categoryRes = await fetch(`http://localhost:3000/api/records/${selectedCategoryId}`);
+    if (!categoryRes.ok) {
       throw new Error('Failed to load record');
     }
 
-    const record = await recordRes.json();
-    if (!record) {
-      throw new Error('Failed to load record');
+    const category = await categoryRes.json();
+    if (!category) {
+      throw new Error('Failed to load category');
     }
-    return record;
-  }, [selectedRecordId]);
+    return category;
+  }, [selectedCategoryId]);
 
 
   useEffect(() => {
-    if (selectedRecordId) {
-      getRecord().then(record => setCurrentRecord(record));
+    if (selectedCategoryId) {
+      getCategory().then(record => setCurrentCategory(record));
     }
-  }, [selectedRecordId, getRecord]);
+  }, [selectedCategoryId, getCategory]);
 
-  const submitForm = useCallback(async (values: BudgetRecordReq, resetForm: () => void) => {
+  const submitForm = useCallback(async (values: BudgetCategoryReq, resetForm: () => void) => {
     try {
-      if (!selectedRecordId) {
+      if (!selectedCategoryId) {
         await fetch(
           'http://localhost:3000/api/records/create',
           {
             method: 'POST',
             body: JSON.stringify({
-              ...values,
-              date: dateSQLadapter(new Date(values.date)),
+              ...values
             })
           }
         );
-        resetForm();
-        closeForm();
       } else {
         await fetch(
           'http://localhost:3000/api/records/update',
           {
             method: 'PUT',
             body: JSON.stringify({
-              record_id: selectedRecordId,
-              ...values,
-              date: dateSQLadapter(new Date(values.date)),
+              category_id: selectedCategoryId,
+              ...values
             })
           }
         );
-        resetForm();
-        closeForm();
       }
-
-      await fetchRecords();
+      
+      resetForm();
+      closeForm();
+      await fetchCategories();
     } catch (error) {
       console.log(error);
     }
@@ -135,8 +123,8 @@ export default function RecordForm({
     <>
       <h1>Record form</h1>
       <Formik
-        initialValues={currentRecord || emptyRecord}
-        enableReinitialize={selectedRecordId ? true : false}
+        initialValues={currentCategory || emptyCategory}
+        enableReinitialize={selectedCategoryId ? true : false}
         onSubmit={(values: any, { resetForm }: FormikHelpers<any>) => submitForm(values, resetForm)}
       >
         {(props: FormikProps<any>) => (
@@ -152,7 +140,7 @@ export default function RecordForm({
               placeholder="Sum" component={SumField} />
             <Field name="date" placeholder="Date" component={DateField} />
             <Field name="category_id" placeholder="Category" component={CategorySelect} defaultValue={props.values.category_id} />
-            <Button type="submit">{selectedRecordId ? 'Update' : 'Create'}</Button>
+            <Button type="submit">{selectedCategoryId ? 'Update' : 'Create'}</Button>
           </Form>
         )
         }
