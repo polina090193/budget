@@ -3,7 +3,7 @@
 import { useCallback, useState, useMemo, useContext, useEffect } from "react";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { GridRowIdGetter } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 // import CustomSnackbar from "../../components/info/CustomSnackbar";
 
@@ -14,10 +14,14 @@ import TitleField from "../inputs/TitleField";
 import SumField from "../inputs/SumField";
 import DateField from "../inputs/DateField";
 import DirectionField from "../inputs/DirectionField";
-import CategorySelect from "../../MainPage/CategorySelect";
+import CategorySelect from "../inputs/CategorySelect";
 
 import { dateSQLadapter } from "@/utils/adapters/dateSQLadapter";
-import { isPressedKeyNumeric } from "@/utils/validation/isPressedKeyNumeric";
+import { preventNotNum } from "@/utils/validation/inputFunctions/preventNotNum";
+import { validateStringLength } from "@/utils/validation/inputFunctions/validateStringLength";
+import { getStringForBadgeFromFormikErrors } from "@/utils/stringHelpers";
+import FieldWithErrorBadge from "@/components/info/FieldWithErrorBadge";
+
 
 export default function RecordForm({
   user,
@@ -41,7 +45,7 @@ export default function RecordForm({
     sum: 0,
     date: '',
     direction: 'MINUS',
-    category_id: Number(categoriesList[0]?.category_id) || 0,
+    category_id: 0,
     user_id: Number(user?.id),
   }), [user, categoriesList]) as BudgetRecord;
 
@@ -120,7 +124,7 @@ export default function RecordForm({
           }
         );
       }
-      
+
       resetForm();
       closeForm();
       await fetchRecords();
@@ -131,34 +135,82 @@ export default function RecordForm({
 
   return (
     <>
-      <h1>Record form</h1>
+      <h1>New transaction</h1>
       <Formik
-        initialValues={currentRecord || emptyRecord}
+        initialValues={currentRecord}
         enableReinitialize={selectedRecordId ? true : false}
         onSubmit={(values: any, { resetForm }: FormikHelpers<any>) => submitForm(values, resetForm)}
       >
-        {(props: FormikProps<any>) => (
+        {({ values, errors, touched, isValidating }: FormikProps<any>) => (
           <Form>
-            <Field name="title" placeholder="Title" component={TitleField} />
-            <Field name="direction" placeholder="Direction" component={DirectionField} />
-            <Field name="sum" onKeyDown={
-              (event: React.KeyboardEvent<HTMLInputElement>) => {
-                if (!isPressedKeyNumeric(event.key)) {
-                  event.preventDefault();
-                }
+            <FieldWithErrorBadge
+              name="title"
+              placeholder="Title"
+              validate={(val: string) => validateStringLength(val, 2)}
+              ariaLabel={getStringForBadgeFromFormikErrors(errors.title, touched.title) || 'Title has no errors'}
+              overlap="circular"
+              badgeContent={getStringForBadgeFromFormikErrors(errors.title, touched.title)}
+              color="primary"
+              component={TitleField}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
               }}
-              placeholder="Sum" component={SumField} />
-            <Field name="date" placeholder="Date" component={DateField} />
-            <Field
+            />
+            <FieldWithErrorBadge
+              name="date"
+              placeholder="Date"
+              validate={(val: string) => val ? null : 'Date is required'}
+              ariaLabel={getStringForBadgeFromFormikErrors(errors.date, touched.date) || 'Date has no errors'}
+              overlap="circular"
+              badgeContent={getStringForBadgeFromFormikErrors(errors.date, touched.date)}
+              color="primary"
+              component={DateField}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+              <Field name="direction" placeholder="Direction" component={DirectionField} sx={{ width: '50%' }} />
+              <Field name="sum" onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => preventNotNum(e)}
+                placeholder="Sum" component={SumField} />
+            </Box>
+            <FieldWithErrorBadge
               name="category_id"
               placeholder="Category"
-              component={CategorySelect}
-              defaultValue={props.values.category_id}
+              validate={(val: string) => !val ? null : 'Category is required'}
+              ariaLabel={getStringForBadgeFromFormikErrors(errors.category_id, touched.category_id) || 'Category has no errors'}
+              overlap="circular"
+              badgeContent={getStringForBadgeFromFormikErrors(errors.category_id, touched.category_id)}
+              color="primary"
+              component={
+                () => (<Field
+                  name="category_id"
+                  placeholder="Category"
+                  component={CategorySelect}
+                  defaultValue={values.category_id || 0}
+                  isWithPlaceholder
+                />)
+              }
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
             />
-            <Button type="submit">{selectedRecordId ? 'Update' : 'Create'}</Button>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: '1rem' }}>
+              <Button
+                type="submit"
+                variant="contained"
+                aria-label={selectedRecordId ? 'Update record' : 'Create record'}
+              // aria-disabled={isDisabled}
+              // disabled={isDisabled}
+              >
+                {selectedRecordId ? 'Update' : 'Create'}
+              </Button>
+            </Box>
           </Form>
-        )
-        }
+        )}
       </Formik>
       {/* <CustomSnackbar
         toastState={toastState} closeToast={closeToast}

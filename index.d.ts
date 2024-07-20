@@ -20,6 +20,7 @@ declare interface BudgetRecordsWithUpdate {
 declare interface SelectValue {
     id: number;
     name: string;
+    isPlaceholder?: boolean;
 }
 
 declare interface BudgetCategory {
@@ -59,3 +60,6 @@ declare interface NextAuthUser {
     email?: string | null | undefined;
     image?: string | null | undefined;
 }
+
+declare type FormikErrorsType = string | FormikErrors<any> | string[] | FormikErrors<any>[] | undefined
+declare type FormikTouchedType = boolean | FormikTouched<any> | FormikTouched<any>[] | undefined

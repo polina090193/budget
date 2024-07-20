@@ -2,7 +2,7 @@
 
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import { RecordsContext } from '@/context-providers/RecordsProvider';
-import { getCategoryNameById } from '@/utils/getCategoryNameById';
+import { getCategoryNameById } from '@/utils/categories/getCategoryNameById';
 import {
   DataGrid,
   GridColDef,

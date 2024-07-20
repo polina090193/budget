@@ -1,4 +1,4 @@
-import { isValidPassword } from "./isValidPassword";
+import { isValidPassword } from "../validationExp/isValidPassword";
 
 export const validatePassword = (password: string | undefined): string | null => {
 

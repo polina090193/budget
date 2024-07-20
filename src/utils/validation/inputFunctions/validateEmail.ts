@@ -1,4 +1,4 @@
-import { isValidEmail } from "./isValidEmail";
+import { isValidEmail } from "../validationExp/isValidEmail";
 
 export const validateEmail = (email: string | undefined): string | null => {
 

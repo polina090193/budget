@@ -5,17 +5,16 @@ import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { GridRowIdGetter } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 
-// import CustomSnackbar from "../../components/info/CustomSnackbar";
-
 import { CategoriesContext } from "@/context-providers/CategoriesProvider";
 
+// import CustomSnackbar from "../../components/info/CustomSnackbar";
 import TitleField from "../inputs/TitleField";
 import SumField from "../inputs/SumField";
 import DateField from "../inputs/DateField";
 import DirectionField from "../inputs/DirectionField";
-import CategorySelect from "../../MainPage/CategorySelect";
+import CategorySelect from "../inputs/CategorySelect";
 
-import { isPressedKeyNumeric } from "@/utils/validation/isPressedKeyNumeric";
+import { preventNotNum } from "@/utils/validation/inputFunctions/preventNotNum";
 
 export default function CategoryForm({
   user,
@@ -131,15 +130,6 @@ export default function CategoryForm({
           <Form>
             <Field name="title" placeholder="Title" component={TitleField} />
             <Field name="direction" placeholder="Direction" component={DirectionField} />
-            <Field name="sum" onKeyDown={
-              (event: React.KeyboardEvent<HTMLInputElement>) => {
-                if (!isPressedKeyNumeric(event.key)) {
-                  event.preventDefault();
-                }
-              }}
-              placeholder="Sum" component={SumField} />
-            <Field name="date" placeholder="Date" component={DateField} />
-            <Field name="category_id" placeholder="Category" component={CategorySelect} defaultValue={props.values.category_id} />
             <Button type="submit">{selectedCategoryId ? 'Update' : 'Create'}</Button>
           </Form>
         )

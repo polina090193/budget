@@ -2,8 +2,8 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 
-import { validateEmail } from "@/utils/validation/validateEmail";
-import { validatePassword } from "@/utils/validation/validatePassword";
+import { validateEmail } from "@/utils/validation/inputFunctions/validateEmail";
+import { validatePassword } from "@/utils/validation/inputFunctions/validatePassword";
 
 import CustomSnackbar from "../../../components/info/CustomSnackbar";
 import EmailField from "./inputs/EmailField";

@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { useMemo, useState } from 'react';
 import RecordFormModal from '../FormModal/RecordForm/RecordFormModal';
 import styles from './assets/MainPage.module.css';
-import CategorySelect from './CategorySelect';
+import CategorySelect from '../FormModal/inputs/CategorySelect';
 import MainMenu from './MainMenu';
 import RecordsList from './RecordsList';
 
@@ -32,6 +32,7 @@ export default function MainPage() {
               <CategorySelect
                 defaultValue={0}
                 isWithAll={true}
+                sx={{ width: 400 }}
                 onCategoryChange={
                   (value: number) => {
                     setSelectedCategoryId(value);
