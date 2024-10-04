@@ -10,7 +10,7 @@ export async function getCategoryById(id: number) {
     
     return categoryDataProcessed;
   } catch (error) {
-    console.log('Error by category loading:' + error);
+    console.log('Error by category loading: ' + error);
   }
 }
 

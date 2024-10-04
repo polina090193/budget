@@ -12,7 +12,7 @@ export async function getAllCategories() {
 
     return categoriesDataProcessed;
   } catch (error) {
-    console.log('Error by categories loading:' + error);
+    console.log('Error by categories loading: ' + error);
     return [];
   }
 }

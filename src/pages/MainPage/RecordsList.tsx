@@ -1,8 +1,8 @@
 'use client';
 
+import { useContext, useEffect, useState } from 'react';
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import { RecordsContext } from '@/context-providers/RecordsProvider';
-import { getCategoryNameById } from '@/utils/categories/getCategoryNameById';
 import {
   DataGrid,
   GridColDef,
@@ -10,8 +10,9 @@ import {
   GridRowParams,
   GridValueGetterParams,
 } from '@mui/x-data-grid';
-import { useContext, useEffect, useState } from 'react';
+import { getCategoryNameById } from '@/utils/categories/getCategoryNameById';
 import styles from './assets/RecordsList.module.css'
+import RecordsPieChart from './RecordsPieChart';
 
 export default function RecordsList(
   {
@@ -138,6 +139,7 @@ export default function RecordsList(
           pageSizeOptions={[10, 20, 50]}
         // checkboxSelection
         />
+        <RecordsPieChart session={session} />
       </>
     )
   } else {
