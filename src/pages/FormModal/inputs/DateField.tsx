@@ -5,9 +5,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { FieldAttributes, FormikProps, FormikSharedConfig, useFormikContext } from 'formik';
 import dayjs from 'dayjs';
 import { defaultInput } from '@/components/inputs/style';
-import { TextField } from '@mui/material';
-import { getStringForBadgeFromFormikErrors } from '@/utils/stringHelpers';
-import { useEffect } from 'react';
 
 export default function DateField({
   field, sx
@@ -15,12 +12,7 @@ export default function DateField({
   field: FieldAttributes<any>,
   sx?: { [key: string]: any },
 }) {
-  const { errors, touched, setFieldValue } = useFormikContext<any>();
-
-  const error = errors[field.name];
-  const touch = touched[field.name];
-
-  const helperText = touch && error ? getStringForBadgeFromFormikErrors(error, touch) : undefined;
+  const { setFieldValue } = useFormikContext<any>();
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

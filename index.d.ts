@@ -1,8 +1,10 @@
+declare type TransactionType = "INCOME" | "EXPENSE";
+
 declare interface BudgetRecord {
     record_id: number;
     date: string;
     title: string;
-    direction: 'PLUS' | 'MINUS';
+    type: TransactionType;
     sum: number;
     category_id: number;
     user_id: number;
@@ -26,13 +28,21 @@ declare interface SelectValue {
 declare interface BudgetCategory {
     category_id: number;
     name: string;
-    direction: 'PLUS' | 'MINUS';
+    type: TransactionType;
     user_id: number;
 }
 
 declare interface BudgetCategoryReq extends Omit<BudgetCategory, 'category_id'> {}
 
 declare type BudgetCategories = BudgetCategory[]
+
+declare interface ReportByCategory {
+    category_id: number;
+    name: string;
+    count: number;
+}
+
+declare interface ReportsByCategorySet { [key: string]: ReportByCategory[] }
 
 declare type ToastSeverity = "error" | "info" | "success" | "warning";
 

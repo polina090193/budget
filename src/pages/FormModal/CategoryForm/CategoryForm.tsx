@@ -15,6 +15,7 @@ import DirectionField from "../inputs/DirectionField";
 import CategorySelect from "../inputs/CategorySelect";
 
 import { preventNotNum } from "@/utils/validation/inputFunctions/preventNotNum";
+import { DEFAULT_TRANSACTION_TYPE } from "@/enums/generalEnums";
 
 export default function CategoryForm({
   user,
@@ -32,7 +33,7 @@ export default function CategoryForm({
   const emptyCategory = useMemo(() => ({
     category_id: 0,
     name: '',
-    direction: 'MINUS',
+    type: DEFAULT_TRANSACTION_TYPE,
     user_id: Number(user?.id),
   }), [user]) as BudgetCategory;
 
@@ -129,7 +130,7 @@ export default function CategoryForm({
         {(props: FormikProps<any>) => (
           <Form>
             <Field name="title" placeholder="Title" component={TitleField} />
-            <Field name="direction" placeholder="Direction" component={DirectionField} />
+            <Field name="type" placeholder="TransactionType" component={DirectionField} />
             <Button type="submit">{selectedCategoryId ? 'Update' : 'Create'}</Button>
           </Form>
         )

@@ -23,8 +23,8 @@ export default function DirectionField({
         value={field.value}
         onChange={(event: SelectChangeEvent<number>) => setFieldValue(field.name, event.target.value)}
       >
-        <MenuItem value={'MINUS'}>Expense</MenuItem>
-        <MenuItem value={'PLUS'}>Income</MenuItem>
+        <MenuItem value={'EXPENSE'}>Expense</MenuItem>
+        <MenuItem value={'INCOME'}>Income</MenuItem>
       </Select>
     </FormControl>
   )

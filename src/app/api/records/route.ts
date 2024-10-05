@@ -1,11 +1,11 @@
-import { NextApiResponse } from 'next';
 import { query } from "@/db";
 import { table_names } from "@/db/table_names";
 import { NextResponse, NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "@/enums/generalEnums";
 
-export async function GET(req: NextRequest, res: NextApiResponse) {
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   
   const session = await getServerSession(authOptions);
@@ -17,8 +17,8 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
   }
 
   const categoryId = searchParams?.get('categoryId') || null;
-  const page = searchParams?.get('page') || 0;
-  const pageSize = searchParams?.get('pageSize') || 10;
+  const page = searchParams?.get('page') || DEFAULT_PAGE;
+  const pageSize = searchParams?.get('pageSize') || DEFAULT_PAGE_SIZE;
   const offset = (Number(page) - 1) * Number(pageSize);
   
   const recordsSQLQuery = `

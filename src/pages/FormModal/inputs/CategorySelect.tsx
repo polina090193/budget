@@ -1,9 +1,9 @@
 "use client";
 
-import { useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import DynamicSelect from '../../../components/inputs/select/DynamicSelect';
-import { FieldAttributes, FormikProps, FormikSharedConfig } from 'formik';
+import { FieldAttributes, FormikProps, FormikSharedConfig/* , useFormikContext */ } from 'formik';
 import { SelectChangeEvent } from '@mui/material';
 
 export default function CategorySelect({
@@ -14,7 +14,7 @@ export default function CategorySelect({
   onCategoryChange,
   sx,
   ...props
-}: (FormikProps<FormikSharedConfig> | {}) & {
+}: FormikProps<FormikSharedConfig> & {
   field?: FieldAttributes<any>,
   defaultValue?: number,
   isWithAll?: boolean,
@@ -22,6 +22,7 @@ export default function CategorySelect({
   onCategoryChange?: (value: number) => void,
   sx?: { [key: string]: any }
 }) {
+  // const { setFieldValue } = useFormikContext<any>();
   const categories = useContext(CategoriesContext);
 
   const categoriesList = useMemo(() => (
@@ -47,12 +48,15 @@ export default function CategorySelect({
     ...categoriesList,
   ]), [categoriesList]);
 
-  const handleCategoryChange = (event: SelectChangeEvent<number>) => {
+  const handleCategoryChange = useCallback((event: SelectChangeEvent<number>) => {
     const numVal = Number(event.target.value);
     
     setCategoryValue(numVal);
     onCategoryChange && onCategoryChange(numVal);
-  };
+    console.log('field.name', field?.name);
+    
+    // setFieldValue(field?.name, numVal);
+  }, [field, onCategoryChange/* , setFieldValue */]);
 
   return (
     <>

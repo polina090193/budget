@@ -1,6 +1,9 @@
-export async function getReportByCategory() {
+export async function getReportByCategory(type?: TransactionType) {
   try {
-    const reportRes = await fetch('http://localhost:3000/api/reports/by-category');
+    let fetchURL = 'http://localhost:3000/api/reports/by-category';
+    fetchURL += type ? `?type=${type}` : '';
+
+    const reportRes = await fetch(fetchURL, { cache: 'no-store' });
     const reportData = await reportRes.json();
 
     return reportData.report;

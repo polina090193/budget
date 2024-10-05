@@ -4,15 +4,15 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { date, title, direction, sum, category_id, user_id } = body;
+  const { date, title, type, sum, category_id, user_id } = body;
 
-  const valuesArr = [title, direction, sum, category_id, user_id];
+  const valuesArr = [title, type, sum, category_id, user_id];
   if (date) {
     valuesArr.unshift(date);
   }
 
   const result = await query(
-    `INSERT INTO ${table_names.records} (${date ? 'date, ' : ''} title, direction, sum, category_id, user_id) VALUES (${date ? '?, ' : ''} ?, ?, ?, ?, ?)`,
+    `INSERT INTO ${table_names.records} (${date ? 'date, ' : ''} title, type, sum, category_id, user_id) VALUES (${date ? '?, ' : ''} ?, ?, ?, ?, ?)`,
     valuesArr
   );
 

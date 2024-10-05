@@ -1,10 +1,10 @@
 import { query } from "@/db";
 import { table_names } from "@/db/table_names";
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]/route';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
@@ -12,29 +12,35 @@ export async function GET() {
       status: 401,
     });
   }
+  const { searchParams } = new URL(req.url);
 
-  // const reportByCategorySQLQuery = `
-  // SELECT category_id, category_name, COUNT(*) as count
-  // FROM ${table_names.records} 
-  // WHERE user_id = ?
-  // GROUP BY category_id
-  // ORDER BY category_id ASC 
-  // `;
+  const type = searchParams?.get('type') || null;
 
   const reportByCategorySQLQuery = `
   SELECT 
     ${table_names.records}.category_id, 
-    ${table_names.categories}.name,  -- Specify the table for the name column
+    ${table_names.categories}.name,
     COUNT(*) as count
+
   FROM ${table_names.records}
   INNER JOIN ${table_names.categories} 
     ON ${table_names.records}.category_id = ${table_names.categories}.category_id 
-    GROUP BY ${table_names.records}.category_id, ${table_names.categories}.name
-    ORDER BY ${table_names.records}.category_id ASC;
-    `;
-    // WHERE user_id = ?
 
-  const report = await query(reportByCategorySQLQuery, [session.user.id]);
+  WHERE ${table_names.records}.user_id = ? 
+    AND ${table_names.categories}.user_id = ?
+    ${type ? `AND ${table_names.categories}.type = ?` : ''}
+    ${type ? `AND ${table_names.records}.type = ?` : ''}
+
+  GROUP BY ${table_names.records}.category_id, ${table_names.categories}.name
+  ORDER BY ${table_names.records}.category_id ASC;
+  `;
+
+  const params = [session.user.id, session.user.id];
+  if (type) {
+    params.push(...[type, type]);
+  }
+
+  const report = await query(reportByCategorySQLQuery, params);
 
   if (!report) {
     return new Response("Request failed", {

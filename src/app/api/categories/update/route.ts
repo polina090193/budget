@@ -5,15 +5,15 @@
 export async function PUT(req: Request) {
   // const body = await req.json();
   
-  // const { name, direction, user_id } = body;
+  // const { name, type, user_id } = body;
 
-  // const valuesArr = [name, direction, user_id];
+  // const valuesArr = [name, type, user_id];
 
   // const result = await query(
   //   `UPDATE ${table_names.categories} SET
-  //   date = ?, title = ?, direction = ?, sum = ?, category_id = ?
+  //   date = ?, title = ?, type = ?, sum = ?, category_id = ?
   //   WHERE record_id = ?;`,
-  //   [date, title, direction, sum, category_id, record_id]
+  //   [date, title, type, sum, category_id, record_id]
   // );
 
   // if (!result) {

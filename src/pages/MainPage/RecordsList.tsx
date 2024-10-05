@@ -12,21 +12,23 @@ import {
 } from '@mui/x-data-grid';
 import { getCategoryNameById } from '@/utils/categories/getCategoryNameById';
 import styles from './assets/RecordsList.module.css'
-import RecordsPieChart from './RecordsPieChart';
+import { useSession } from 'next-auth/react';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/enums/generalEnums';
+import PieChartByCategory from './PieChartByCategory';
 
 export default function RecordsList(
   {
-    session,
     setShowRecordFormModal,
     setSelectedRecordId,
     selectedCategoryId,
   }: {
-    session: any,
     setShowRecordFormModal: (value: boolean) => void,
     setSelectedRecordId: (value: GridRowIdGetter) => void,
     selectedCategoryId?: number,
   }
 ) {
+  const { data: session } = useSession();
+  
   const categories = useContext(CategoriesContext);
   const categoriesList = categories?.categoriesData ?? [];
 
@@ -36,13 +38,13 @@ export default function RecordsList(
   const areRecordsLoading = records?.areRecordsLoading ?? false;
 
   const [paginationModel, setPaginationModel] = useState({
-    pageSize: 10,
-    page: 0,
+    pageSize: DEFAULT_PAGE_SIZE,
+    page: DEFAULT_PAGE - 1,
   });
 
   useEffect(() => {
     if (session) {
-      records?.fetchRecords(paginationModel.page + 1, paginationModel.pageSize, selectedCategoryId);
+      fetchRecords(paginationModel.page + 1, paginationModel.pageSize, selectedCategoryId);
     }
   }, [session, paginationModel, selectedCategoryId]);
 
@@ -72,14 +74,14 @@ export default function RecordsList(
 
   const columns: GridColDef[] = [
     {
-      field: 'direction',
+      field: 'type',
       headerName: '',
       valueGetter: (params) => {
         if (!params.value) {
           return '?';
-        } else if (params.value === 'PLUS') {
+        } else if (params.value === 'INCOME') {
           return '➕';
-        } else if (params.value === 'MINUS') {
+        } else if (params.value === 'EXPENSE') {
           return '➖';
         }
       },
@@ -131,15 +133,16 @@ export default function RecordsList(
           onPaginationModelChange={setPaginationModel}
           paginationMode="server"
           getRowClassName={(params: GridRowParams<any>) => {
-            if (params.row.direction === 'MINUS') {
+            if (params.row.type === 'EXPENSE') {
               return styles.expenseRow;
             }
             return styles.incomeRow;
           }}
-          pageSizeOptions={[10, 20, 50]}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
         // checkboxSelection
         />
-        <RecordsPieChart session={session} />
+        {!selectedCategoryId && <PieChartByCategory type="INCOME" />}
+        {!selectedCategoryId && <PieChartByCategory type="EXPENSE" />}
       </>
     )
   } else {

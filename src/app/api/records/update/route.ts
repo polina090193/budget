@@ -5,18 +5,18 @@ import { NextResponse } from 'next/server';
 export async function PUT(req: Request) {
   const body = await req.json();
   
-  const { record_id, date, title, direction, sum, category_id } = body;
+  const { record_id, date, title, type, sum, category_id } = body;
 
-  const valuesArr = [title, direction, sum, category_id, record_id];
+  const valuesArr = [title, type, sum, category_id, record_id];
   if (date) {
     valuesArr.unshift(date);
   }
 
   const result = await query(
     `UPDATE ${table_names.records} SET
-    date = ?, title = ?, direction = ?, sum = ?, category_id = ?
+    date = ?, title = ?, type = ?, sum = ?, category_id = ?
     WHERE record_id = ?;`,
-    [date, title, direction, sum, category_id, record_id]
+    [date, title, type, sum, category_id, record_id]
   );
 
   if (!result) {

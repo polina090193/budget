@@ -4,12 +4,12 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, direction/* , user_id */ } = body;
+  const { name, type/* , user_id */ } = body;
 
-  const valuesArr = [name, direction];
+  const valuesArr = [name, type];
 
   const result = await query(
-    `INSERT INTO ${table_names.categories} (name, direction, user_id) VALUES (?, ?, ?)`,
+    `INSERT INTO ${table_names.categories} (name, type, user_id) VALUES (?, ?, ?)`,
     valuesArr
   );
 

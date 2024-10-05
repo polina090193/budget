@@ -2,6 +2,7 @@ async function getAllRecords(page?: number, pageSize?: number, categoryId?: numb
   records: BudgetRecords;
   total: number;
 } | undefined> {
+  
   let fetchURL = 'http://localhost:3000/api/records';
   fetchURL += page ? `?page=${page}` : '';
   fetchURL += pageSize ? `&pageSize=${pageSize}` : '';

@@ -43,7 +43,6 @@ export default function MainPage() {
                 Create record
               </Button>
               <RecordsList
-                session={session}
                 setShowRecordFormModal={setShowRecordFormModal}
                 setSelectedRecordId={setSelectedRecordId}
                 selectedCategoryId={selectedCategoryId}

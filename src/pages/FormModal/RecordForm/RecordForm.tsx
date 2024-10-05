@@ -21,6 +21,7 @@ import { preventNotNum } from "@/utils/validation/inputFunctions/preventNotNum";
 import { validateStringLength } from "@/utils/validation/inputFunctions/validateStringLength";
 import { getStringForBadgeFromFormikErrors } from "@/utils/stringHelpers";
 import FieldWithErrorBadge from "@/components/info/FieldWithErrorBadge";
+import { DEFAULT_TRANSACTION_TYPE } from "@/enums/generalEnums";
 
 
 export default function RecordForm({
@@ -44,7 +45,7 @@ export default function RecordForm({
     title: '',
     sum: 0,
     date: '',
-    direction: 'MINUS',
+    type: DEFAULT_TRANSACTION_TYPE,
     category_id: 0,
     user_id: Number(user?.id),
   }), [user, categoriesList]) as BudgetRecord;
@@ -99,6 +100,8 @@ export default function RecordForm({
   }, [selectedRecordId, getRecord]);
 
   const submitForm = useCallback(async (values: BudgetRecordReq, resetForm: () => void) => {
+    // console.log('values category_id: ' + values.category_id);
+    
     try {
       if (!selectedRecordId) {
         await fetch(
@@ -141,7 +144,7 @@ export default function RecordForm({
         enableReinitialize={selectedRecordId ? true : false}
         onSubmit={(values: any, { resetForm }: FormikHelpers<any>) => submitForm(values, resetForm)}
       >
-        {({ values, errors, touched, isValidating }: FormikProps<any>) => (
+        {({ values, errors, touched }: FormikProps<any>) => (
           <Form>
             <FieldWithErrorBadge
               name="title"
@@ -172,14 +175,14 @@ export default function RecordForm({
               }}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
-              <Field name="direction" placeholder="Direction" component={DirectionField} sx={{ width: '50%' }} />
+              <Field name="type" placeholder="TransactionType" component={DirectionField} sx={{ width: '50%' }} />
               <Field name="sum" onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => preventNotNum(e)}
                 placeholder="Sum" component={SumField} />
             </Box>
             <FieldWithErrorBadge
               name="category_id"
               placeholder="Category"
-              validate={(val: string) => !val ? null : 'Category is required'}
+              validate={(val: string) => val ? null : 'Category is required'}
               ariaLabel={getStringForBadgeFromFormikErrors(errors.category_id, touched.category_id) || 'Category has no errors'}
               overlap="circular"
               badgeContent={getStringForBadgeFromFormikErrors(errors.category_id, touched.category_id)}

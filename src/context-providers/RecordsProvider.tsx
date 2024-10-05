@@ -34,10 +34,6 @@ const RecordsProvider = ({ children }: { children: React.ReactNode }) => {
     setAreRecordsLoading(false);
   }, [session?.user?.id, setRecordsData]);
 
-  useEffect(() => {
-    fetchRecords();
-  }, []);
-
   return (
     <RecordsContext.Provider value={{recordsData, areRecordsLoading, fetchRecords, total}}>{children}</RecordsContext.Provider>
   );
