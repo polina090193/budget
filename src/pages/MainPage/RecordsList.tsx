@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import { RecordsContext } from '@/context-providers/RecordsProvider';
 import {
@@ -14,7 +14,7 @@ import { getCategoryNameById } from '@/utils/categories/getCategoryNameById';
 import styles from './assets/RecordsList.module.css'
 import { useSession } from 'next-auth/react';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/enums/generalEnums';
-import PieChartByCategory from './PieChartByCategory';
+import PieChartByCategory from '../../components/charts/PieChartByCategory';
 
 export default function RecordsList(
   {
@@ -33,9 +33,9 @@ export default function RecordsList(
   const categoriesList = categories?.categoriesData ?? [];
 
   const records = useContext(RecordsContext);
-  const recordsList = records?.recordsData ?? [];
-  const fetchRecords = records?.fetchRecords ?? (() => { });
-  const areRecordsLoading = records?.areRecordsLoading ?? false;
+  const recordsList = useMemo(() => records?.recordsData ?? [], [records?.recordsData]);
+  const fetchRecords = useMemo(() => records?.fetchRecords ?? (() => { }), [records?.recordsData]);
+  const areRecordsLoading = useMemo(() => records?.areRecordsLoading ?? false, [records?.recordsData]);
 
   const [paginationModel, setPaginationModel] = useState({
     pageSize: DEFAULT_PAGE_SIZE,
@@ -46,7 +46,7 @@ export default function RecordsList(
     if (session) {
       fetchRecords(paginationModel.page + 1, paginationModel.pageSize, selectedCategoryId);
     }
-  }, [session, paginationModel, selectedCategoryId]);
+  }, [session, paginationModel, selectedCategoryId, fetchRecords]);
 
   const updateRecord = (recordId: GridRowIdGetter) => () => {
     setShowRecordFormModal(true);

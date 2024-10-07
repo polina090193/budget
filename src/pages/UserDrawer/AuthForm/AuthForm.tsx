@@ -35,14 +35,14 @@ export default function AuthForm({toggleUserDrawer}: {toggleUserDrawer: () => vo
       toastMessage: message,
       toastSeverity: severity,
     });
-  }, []);
+  }, [toastState]);
 
   const closeToast = useCallback(() => {
     setToastState({
       ...toastState,
       open: false
     });
-  }, []);
+  }, [toastState]);
 
   useEffect(() => {
     if (formRef?.current) {
@@ -101,7 +101,7 @@ export default function AuthForm({toggleUserDrawer}: {toggleUserDrawer: () => vo
         setToast('error', 'Login or password is incorrect');
       }
     }
-  }, [hasAccount])
+  }, [hasAccount,toggleUserDrawer, setToast])
 
   return (
     <div className={styles.loginContainer}>
@@ -118,7 +118,7 @@ export default function AuthForm({toggleUserDrawer}: {toggleUserDrawer: () => vo
 
       </form>
       {hasAccount ? (
-        <div>Don't have an account?
+        <div>Don&apos;t have an account?
           <button
             type="button"
             onClick={() => setHasAccount(prevHasAccount => !prevHasAccount)}>

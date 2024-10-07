@@ -19,7 +19,7 @@ export default function MainMenu(
 
   const pressUserButton = useCallback(() => {
     toggleUserDrawer();
-  }, [])
+  }, [toggleUserDrawer])
 
   return (
     <header className={styles.header}>

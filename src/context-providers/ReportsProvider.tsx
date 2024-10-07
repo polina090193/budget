@@ -34,7 +34,7 @@ const ReportsProvider = ({ children }: { children: React.ReactNode }) => {
       console.log('Error by records loading on client:' + error);
     }
     setAreReportsLoading(false);
-  }, [session?.user?.id, setReportsByCategory]);
+  }, [session?.user, setReportsByCategory]);
 
   return (
     <ReportsContext.Provider

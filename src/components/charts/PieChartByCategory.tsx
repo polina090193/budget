@@ -13,14 +13,14 @@ export default function PieChartByCategory({ type }: {type?: TransactionType}) {
 
   const typeKey = useMemo(() => type?.toLowerCase() || 'all', [type]);
 
-  const reportsData = useMemo(() => reports?.reportsByCategory[typeKey] ?? [], [reports, type]);
+  const reportsData = useMemo(() => reports?.reportsByCategory[typeKey] ?? [], [reports, typeKey]);
   const isReportLoading = reports?.areReportsLoading ?? false;
 
   useEffect(() => {
     if (session) {
       fetchReportByCategory(typeKey, type);
     }
-  }, [session, type]);
+  }, [fetchReportByCategory, session, type, typeKey]);
 
   if (isReportLoading) {
     return <p>Loading...</p>
@@ -37,7 +37,7 @@ export default function PieChartByCategory({ type }: {type?: TransactionType}) {
           {
             data: reportsData?.map((categoryReport: ReportByCategory, index: number) => ({
               id: index,
-              value: categoryReport.count,
+              value: categoryReport.sum,
               label: categoryReport.name
             })) ?? [],
           },

@@ -20,7 +20,7 @@ const CategoriesProvider = ({ children }: { children: React.ReactNode }) => {
     const data = await getAllCategories();
     setCategoriesData(data);
     setAreCategoriesLoading(false);
-  }, [session?.user?.id, setCategoriesData]);
+  }, [session?.user, setCategoriesData]);
 
   useEffect(() => {
     fetchCategories();

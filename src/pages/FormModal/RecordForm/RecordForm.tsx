@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useMemo, useContext, useEffect } from "react";
+import { useCallback, useState, useMemo, useContext, useEffect, memo } from "react";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { GridRowIdGetter } from "@mui/x-data-grid";
 import { Box, Button } from "@mui/material";
@@ -23,8 +23,7 @@ import { getStringForBadgeFromFormikErrors } from "@/utils/stringHelpers";
 import FieldWithErrorBadge from "@/components/info/FieldWithErrorBadge";
 import { DEFAULT_TRANSACTION_TYPE } from "@/enums/generalEnums";
 
-
-export default function RecordForm({
+const RecordForm = memo(function RecordFormComponent({
   user,
   selectedRecordId,
   closeForm,
@@ -33,6 +32,7 @@ export default function RecordForm({
   selectedRecordId?: GridRowIdGetter | null,
   closeForm: () => void,
 }) {
+  const [formIsLoading, setFormIsLoading] = useState(false);
 
   const categories = useContext(CategoriesContext);
   const categoriesList = categories?.categoriesData ?? [];
@@ -48,7 +48,7 @@ export default function RecordForm({
     type: DEFAULT_TRANSACTION_TYPE,
     category_id: 0,
     user_id: Number(user?.id),
-  }), [user, categoriesList]) as BudgetRecord;
+  }), [user]) as BudgetRecord;
 
   const [currentRecord, setCurrentRecord] = useState<BudgetRecord>(emptyRecord)
 
@@ -77,10 +77,13 @@ export default function RecordForm({
 
   const getRecord = useCallback(async () => {
     if (!selectedRecordId) {
+      setFormIsLoading(false);
       return emptyRecord;
     }
-
     const recordRes = await fetch(`http://localhost:3000/api/records/${selectedRecordId}`);
+
+    setFormIsLoading(false);
+
     if (!recordRes.ok) {
       throw new Error('Failed to load record');
     }
@@ -90,18 +93,16 @@ export default function RecordForm({
       throw new Error('Failed to load record');
     }
     return record;
-  }, [selectedRecordId]);
-
+  }, [selectedRecordId, setFormIsLoading, emptyRecord]);
 
   useEffect(() => {
+    setFormIsLoading(true);
     if (selectedRecordId) {
       getRecord().then(record => setCurrentRecord(record));
     }
   }, [selectedRecordId, getRecord]);
 
   const submitForm = useCallback(async (values: BudgetRecordReq, resetForm: () => void) => {
-    // console.log('values category_id: ' + values.category_id);
-    
     try {
       if (!selectedRecordId) {
         await fetch(
@@ -134,12 +135,12 @@ export default function RecordForm({
     } catch (error) {
       console.log(error);
     }
-  }, [])
+  }, [closeForm, fetchRecords, selectedRecordId]);
 
   return (
     <>
       <h1>New transaction</h1>
-      <Formik
+      {formIsLoading ? <p>Loading...</p> : (<Formik
         initialValues={currentRecord}
         enableReinitialize={selectedRecordId ? true : false}
         onSubmit={(values: any, { resetForm }: FormikHelpers<any>) => submitForm(values, resetForm)}
@@ -192,6 +193,9 @@ export default function RecordForm({
                   name="category_id"
                   placeholder="Category"
                   component={CategorySelect}
+                  onCategoryChange={(value: number) => {
+                    setCurrentRecord({ ...values, category_id: value });
+                  }}
                   defaultValue={values.category_id || 0}
                   isWithPlaceholder
                 />)
@@ -214,10 +218,13 @@ export default function RecordForm({
             </Box>
           </Form>
         )}
-      </Formik>
+      </Formik>)}
       {/* <CustomSnackbar
         toastState={toastState} closeToast={closeToast}
       /> */}
     </>
   )
 }
+)
+
+export default RecordForm

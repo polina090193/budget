@@ -28,7 +28,7 @@ export default function CategoryForm({
 }) {
 
   const categories = useContext(CategoriesContext);
-  const fetchCategories = categories?.fetchCategories ?? (() => { });
+  const fetchCategories = useMemo(() => categories?.fetchCategories ?? (() => { }), [categories]);
 
   const emptyCategory = useMemo(() => ({
     category_id: 0,
@@ -77,7 +77,7 @@ export default function CategoryForm({
       throw new Error('Failed to load category');
     }
     return category;
-  }, [selectedCategoryId]);
+  }, [selectedCategoryId, emptyCategory]);
 
 
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function CategoryForm({
     } catch (error) {
       console.log(error);
     }
-  }, [])
+  }, [closeForm, selectedCategoryId, fetchCategories]);
 
   return (
     <>

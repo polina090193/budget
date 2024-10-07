@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
   SELECT 
     ${table_names.records}.category_id, 
     ${table_names.categories}.name,
-    COUNT(*) as count
+    SUM(${table_names.records}.sum) as sum
 
   FROM ${table_names.records}
   INNER JOIN ${table_names.categories} 

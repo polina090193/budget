@@ -39,7 +39,7 @@ declare type BudgetCategories = BudgetCategory[]
 declare interface ReportByCategory {
     category_id: number;
     name: string;
-    count: number;
+    sum: number;
 }
 
 declare interface ReportsByCategorySet { [key: string]: ReportByCategory[] }

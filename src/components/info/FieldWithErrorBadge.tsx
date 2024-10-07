@@ -21,7 +21,7 @@ const withErrorBadge = (WrappedComponent: React.FC) => {
     },
   }));
 
-  return ({ badgeContent, ariaLabel, anchorOrigin, ...props }: ErrorBadgeProps) => {
+  const ComponentWithBadge = ({ badgeContent, ariaLabel, anchorOrigin, ...props }: ErrorBadgeProps) => {
     return (
       <StyledBadge
         aria-label={ariaLabel}
@@ -34,6 +34,10 @@ const withErrorBadge = (WrappedComponent: React.FC) => {
       </StyledBadge>
     );
   };
+
+  ComponentWithBadge.displayName = `WithErrorBadge(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+
+  return ComponentWithBadge;
 };
 
 const FieldWithErrorBadge = withErrorBadge(Field);

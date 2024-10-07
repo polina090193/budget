@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import DynamicSelect from '../../../components/inputs/select/DynamicSelect';
 import { FieldAttributes, FormikProps, FormikSharedConfig/* , useFormikContext */ } from 'formik';
@@ -22,14 +22,12 @@ export default function CategorySelect({
   onCategoryChange?: (value: number) => void,
   sx?: { [key: string]: any }
 }) {
-  // const { setFieldValue } = useFormikContext<any>();
   const categories = useContext(CategoriesContext);
 
   const categoriesList = useMemo(() => (
     categories?.categoriesData.map((item) => ({...item, id: item.category_id})) ?? []
   ), [categories?.categoriesData]);
 
-  const [categoryValue, setCategoryValue] = useState<number | undefined>(0);
 
   const categoriesListWithAll = useMemo(() => ([
     {
@@ -51,12 +49,8 @@ export default function CategorySelect({
   const handleCategoryChange = useCallback((event: SelectChangeEvent<number>) => {
     const numVal = Number(event.target.value);
     
-    setCategoryValue(numVal);
     onCategoryChange && onCategoryChange(numVal);
-    console.log('field.name', field?.name);
-    
-    // setFieldValue(field?.name, numVal);
-  }, [field, onCategoryChange/* , setFieldValue */]);
+  }, [onCategoryChange]);
 
   return (
     <>
@@ -64,14 +58,14 @@ export default function CategorySelect({
         <p>Loading...</p>
       ) : (
         <DynamicSelect
-          value={categoryValue || defaultValue}
+          value={field?.value}
           onChange={handleCategoryChange}
           data={isWithAll 
             ? categoriesListWithAll 
             : isWithPlaceholder 
             ? categoriesListWithPlaceholder 
             : categoriesList}
-          defaultValue={defaultValue || 0}
+          defaultValue={field?.value || 0}
           namePlural="categories"
           nameSingular="category"
           sx={sx}

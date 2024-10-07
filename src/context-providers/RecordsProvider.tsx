@@ -32,7 +32,7 @@ const RecordsProvider = ({ children }: { children: React.ReactNode }) => {
       console.log('Error by records loading on client:' + error);
     }
     setAreRecordsLoading(false);
-  }, [session?.user?.id, setRecordsData]);
+  }, [session?.user, setRecordsData]);
 
   return (
     <RecordsContext.Provider value={{recordsData, areRecordsLoading, fetchRecords, total}}>{children}</RecordsContext.Provider>
