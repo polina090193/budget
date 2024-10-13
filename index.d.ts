@@ -12,7 +12,7 @@ declare interface BudgetRecord {
 
 declare interface BudgetRecordReq extends Omit<BudgetRecord, 'record_id'> {}
 
-declare type BudgetRecords = (BudgetRecord | BudgetRecordReq)[]
+declare type BudgetRecords = (BudgetRecord)[]
 
 declare interface BudgetRecordsWithUpdate {
     recordsData: BudgetRecords,

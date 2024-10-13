@@ -22,7 +22,6 @@ export default function CategoryForm({
   selectedCategoryId?: GridRowIdGetter | null,
   closeForm: () => void,
 }): JSX.Element {
-
   const categories = useContext(CategoriesContext);
   const fetchCategories = useMemo(() => categories?.fetchCategories ?? (() => { }), [categories]);
 

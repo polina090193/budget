@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useMemo, useContext, useEffect, memo } from "react";
+import { useCallback, useState, useMemo, useContext, useEffect, memo, ChangeEvent } from "react";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { GridRowIdGetter } from "@mui/x-data-grid";
 import { Box, Button } from "@mui/material";
@@ -17,7 +17,6 @@ import DirectionField from "../inputs/DirectionField";
 import CategorySelect from "../inputs/CategorySelect";
 
 import { dateSQLadapter } from "@/utils/adapters/dateSQLadapter";
-import { preventNotNum } from "@/utils/validation/inputFunctions/preventNotNum";
 import { validateStringLength } from "@/utils/validation/inputFunctions/validateStringLength";
 import { getStringForBadgeFromFormikErrors } from "@/utils/stringHelpers";
 import FieldWithErrorBadge from "@/components/info/FieldWithErrorBadge";
@@ -97,9 +96,7 @@ const RecordForm = memo(function RecordFormComponent({
 
   useEffect(() => {
     setFormIsLoading(true);
-    if (selectedRecordId) {
-      getRecord().then(record => setCurrentRecord(record));
-    }
+    getRecord().then(record => setCurrentRecord(record));
   }, [selectedRecordId, getRecord]);
 
   const submitForm = useCallback(async (values: BudgetRecordReq, resetForm: () => void) => {
@@ -145,7 +142,7 @@ const RecordForm = memo(function RecordFormComponent({
         enableReinitialize={selectedRecordId ? true : false}
         onSubmit={(values: any, { resetForm }: FormikHelpers<any>) => submitForm(values, resetForm)}
       >
-        {({ values, errors, touched }: FormikProps<any>) => (
+        {({ values, errors, touched, setFieldValue  }: FormikProps<any>) => (
           <Form>
             <FieldWithErrorBadge
               name="title"
@@ -177,7 +174,9 @@ const RecordForm = memo(function RecordFormComponent({
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
               <Field name="type" placeholder="TransactionType" component={DirectionField} sx={{ width: '50%' }} />
-              <Field name="sum" onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => preventNotNum(e)}
+              <Field name="sum"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => 
+                  setFieldValue('myNumber', e.target.value.replace(/[^0-9]/g, ''))}
                 placeholder="Sum" component={SumField} />
             </Box>
             <FieldWithErrorBadge

@@ -1,5 +1,4 @@
 "use client";
-
 import { Snackbar, Alert } from "@mui/material";
 
 interface SnackbarProps {
@@ -12,18 +11,14 @@ export default function CustomSnackbar(
   ) {
   const { open, toastSeverity, toastMessage } = toastState;
   
-  const handleCloseToast = () => {
-    closeToast();
-  };
-
   return (
     <Snackbar
       open={open}
       autoHideDuration={6000}
-      onClose={handleCloseToast}
+      onClose={closeToast}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
-      <Alert sx={{ maxWidth: '30vw' }} elevation={6} variant="filled" onClose={handleCloseToast} severity={toastSeverity}>
+      <Alert sx={{ maxWidth: '30vw' }} elevation={6} variant="filled" onClose={closeToast} severity={toastSeverity}>
         {toastMessage}
       </Alert>
     </Snackbar>

@@ -9,7 +9,7 @@ export default function PieChartByCategory({ type }: {type?: TransactionType}) {
   const { data: session } = useSession();
 
   const reports = useContext(ReportsContext);
-  const fetchReportByCategory = reports?.fetchReportByCategory ?? (() => { });
+  const fetchReportByCategory = useMemo(() => reports?.fetchReportByCategory ?? (() => { }), [reports]);
 
   const typeKey = useMemo(() => type?.toLowerCase() || 'all', [type]);
 

@@ -1,10 +1,21 @@
 "use client";
 
 import { useCallback } from "react";
-
 import { Box, Modal } from "@mui/material";
 import RecordForm from "./RecordForm";
 import { GridRowIdGetter } from "@mui/x-data-grid";
+
+const style = {
+  position: 'absolute' as const,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 export default function RecordFormModal({
   user,
@@ -19,18 +30,6 @@ export default function RecordFormModal({
   selectedRecordId?: GridRowIdGetter | null,
   setSelectedRecordId: (value: GridRowIdGetter | null) => void,
 }) {
-  const style = {
-    position: 'absolute' as const,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
   const handleClose = useCallback(() => {
     setShowRecordFormModal(false);
     setSelectedRecordId(null);

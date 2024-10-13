@@ -10,10 +10,10 @@ import { defaultInput } from '@/components/inputs/style';
 export default function DateField({
   field, sx
 }: FormikProps<FormikSharedConfig> & {
-  field: FieldAttributes<any>,
-  sx?: { [key: string]: any },
-}) {
-  const { setFieldValue } = useFormikContext<any>();
+  field: FieldAttributes<unknown>,
+  sx?: { [key: string]: unknown },
+}): JSX.Element | null {
+  const { setFieldValue } = useFormikContext<unknown>();
 
   if (!setFieldValue) return null;
 

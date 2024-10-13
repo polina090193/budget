@@ -21,7 +21,7 @@ export default function CategorySelect({
   isWithPlaceholder?: boolean,
   onCategoryChange?: (value: number) => void,
   sx?: { [key: string]: unknown }
-}) {
+}): JSX.Element | null {
   const categories = useContext(CategoriesContext);
 
   const categoriesList = useMemo(() => (

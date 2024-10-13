@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import { RecordsContext } from '@/context-providers/RecordsProvider';
 import {
@@ -30,12 +30,12 @@ export default function RecordsList(
   const { data: session } = useSession();
   
   const categories = useContext(CategoriesContext);
-  const categoriesList = categories?.categoriesData ?? [];
+  const categoriesList = useMemo(() => categories?.categoriesData ?? [], [categories?.categoriesData]);
 
   const records = useContext(RecordsContext);
   const recordsList = useMemo(() => records?.recordsData ?? [], [records?.recordsData]);
-  const fetchRecords = useMemo(() => records?.fetchRecords ?? (() => { }), [records?.recordsData]);
-  const areRecordsLoading = useMemo(() => records?.areRecordsLoading ?? false, [records?.recordsData]);
+  const fetchRecords = useMemo(() => records?.fetchRecords ?? (() => { }), [records?.fetchRecords]);
+  const areRecordsLoading = useMemo(() => records?.areRecordsLoading ?? false, [records?.areRecordsLoading]);
 
   const [paginationModel, setPaginationModel] = useState({
     pageSize: DEFAULT_PAGE_SIZE,
@@ -48,18 +48,12 @@ export default function RecordsList(
     }
   }, [session, paginationModel, selectedCategoryId, fetchRecords]);
 
-  const updateRecord = (recordId: GridRowIdGetter) => () => {
+  const updateRecord = useCallback((recordId: GridRowIdGetter) => () => {
     setShowRecordFormModal(true);
     setSelectedRecordId(recordId);
-  }
+  }, [setShowRecordFormModal, setSelectedRecordId]);
 
-  const showConfirmDeleteModal = (recordId: GridRowIdGetter) => () => {
-    if (window.confirm('Are you sure you want to delete this record?')) {
-      deleteRecord(recordId);
-    }
-  }
-
-  const deleteRecord = async (recordId: GridRowIdGetter) => {
+  const deleteRecord = useCallback(async (recordId: GridRowIdGetter) => {
     await fetch(
       'http://localhost:3000/api/records/delete',
       {
@@ -70,9 +64,15 @@ export default function RecordsList(
       }
     );
     await fetchRecords();
-  }
+  }, [fetchRecords]);
 
-  const columns: GridColDef[] = [
+  const showConfirmDeleteModal = useCallback((recordId: GridRowIdGetter) => () => {
+    if (window.confirm('Are you sure you want to delete this record?')) {
+      deleteRecord(recordId);
+    }
+  }, [deleteRecord]);
+
+  const columns: GridColDef[] = useMemo(() => [
     {
       field: 'type',
       headerName: '',
@@ -107,11 +107,11 @@ export default function RecordsList(
         </div>
       ),
     },
-  ];
+  ], [updateRecord, showConfirmDeleteModal, categoriesList]);
 
-  const getRowId: GridRowIdGetter<any> | undefined = (row) => {
+  const getRowId: GridRowIdGetter<BudgetRecord> | undefined = useCallback((row: BudgetRecord) => {
     return row.record_id;
-  }
+  }, []);
 
   if (areRecordsLoading) {
     return <p>Loading...</p>

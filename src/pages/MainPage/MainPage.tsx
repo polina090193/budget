@@ -10,7 +10,7 @@ import CategorySelect from '../FormModal/inputs/CategorySelect';
 import MainMenu from './MainMenu';
 import RecordsList from './RecordsList';
 
-export default function MainPage() {
+export default function MainPage(): JSX.Element {
   const session = useSession({required: true});
 
   const sessionData = useMemo(() => session?.data || null, [session?.data]);

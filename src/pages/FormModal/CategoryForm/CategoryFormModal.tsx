@@ -6,6 +6,18 @@ import { Box, Modal } from "@mui/material";
 import CategoryForm from "./CategoryForm";
 import { GridRowIdGetter } from "@mui/x-data-grid";
 
+const style = {
+  position: 'absolute' as const,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 export default function CategoryFormModal({
   user,
   showRecordFormModal,
@@ -19,18 +31,6 @@ export default function CategoryFormModal({
   selectedCategoryId?: GridRowIdGetter | null,
   setSelectedCategoryId: (value: GridRowIdGetter | null) => void,
 }): JSX.Element {
-  const style = {
-    position: 'absolute' as const,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
   const handleClose = useCallback(() => {
     setShowRecordFormModal(false);
     setSelectedCategoryId(null);

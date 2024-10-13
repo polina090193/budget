@@ -12,15 +12,15 @@ type ErrorBadgeProps = {
   [key: string]: any;
 }
 
-const withErrorBadge = (WrappedComponent: React.FC) => {
-  const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
-    width: '100%',
-    '& .MuiBadge-badge': {
-      width: 'max-content',
-      backgroundColor: theme.palette.secondary.main,
-    },
-  }));
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  width: '100%',
+  '& .MuiBadge-badge': {
+    width: 'max-content',
+    backgroundColor: theme.palette.secondary.main,
+  },
+}));
 
+const withErrorBadge = (WrappedComponent: React.FC) => {
   const ComponentWithBadge = ({ badgeContent, ariaLabel, anchorOrigin, ...props }: ErrorBadgeProps) => {
     return (
       <StyledBadge
