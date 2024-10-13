@@ -11,10 +11,13 @@ import MainMenu from './MainMenu';
 import RecordsList from './RecordsList';
 
 export default function MainPage() {
-  const { data: session, status: sessionStatus } = useSession();
+  const session = useSession({required: true});
 
-  const isLoggedIn = useMemo(() => sessionStatus === "authenticated", [sessionStatus]);
-  const isSessionLoading = useMemo(() => sessionStatus === "loading", [sessionStatus]);
+  const sessionData = useMemo(() => session?.data || null, [session?.data]);
+  const sessionStatus = useMemo(() => session?.status || null, [session?.status]);
+
+  const isLoggedIn = useMemo(() => sessionStatus && sessionStatus === "authenticated", [sessionStatus]);
+  const isSessionLoading = useMemo(() => sessionStatus && sessionStatus === "loading", [sessionStatus]);
 
   const [showRecordFormModal, setShowRecordFormModal] = useState(false);
   const [ selectedRecordId, setSelectedRecordId ] = useState<GridRowIdGetter | null>(null);
@@ -26,7 +29,7 @@ export default function MainPage() {
         <p>Loading...</p>
       ) : (
         <>
-          <MainMenu isLoggedIn={isLoggedIn} session={session} />
+          <MainMenu isLoggedIn={isLoggedIn} session={sessionData} />
           {isLoggedIn && (
             <>
               <CategorySelect
@@ -48,7 +51,7 @@ export default function MainPage() {
                 selectedCategoryId={selectedCategoryId}
               />
               <RecordFormModal
-                user={session?.user}
+                user={sessionData?.user}
                 showRecordFormModal={showRecordFormModal}
                 setShowRecordFormModal={setShowRecordFormModal}
                 selectedRecordId={selectedRecordId}

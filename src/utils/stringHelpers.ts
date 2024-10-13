@@ -1,9 +1,9 @@
-import { FormikErrors, FormikTouched } from "formik";
+import { FormikErrors } from "formik";
 
 export const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 export const getStringForBadgeFromFormikErrors = (
-  errors: string | FormikErrors<any> | string[] | FormikErrors<any>[] | undefined,
+  errors: string | FormikErrors<unknown> | string[] | FormikErrors<unknown>[] | undefined,
   touched: FormikTouchedType
 ) => touched && errors 
   ? Array.isArray(errors) 

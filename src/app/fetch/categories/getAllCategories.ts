@@ -4,7 +4,7 @@ export async function getAllCategories() {
     const categoriesData = await categoriesRes.json();
 
     const categoriesDataProcessed: BudgetCategory[] = [
-      ...categoriesData.map((category: BudgetCategoryRes) => ({
+      ...categoriesData.map((category: BudgetCategory) => ({
         ...category,
         id: category.category_id.toString(),
       }))

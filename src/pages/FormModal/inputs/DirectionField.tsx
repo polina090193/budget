@@ -1,6 +1,6 @@
 "use client";
-import { defaultInput, halfWidth } from '@/components/inputs/style';
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { defaultInput } from '@/components/inputs/style';
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { FieldAttributes, FormikProps, FormikSharedConfig, useFormikContext } from 'formik';
 
 export default function DirectionField({
@@ -21,6 +21,7 @@ export default function DirectionField({
         id="expense-income-select"
         label="Expense or Income"
         value={field.value}
+        {...props}
         onChange={(event: SelectChangeEvent<number>) => setFieldValue(field.name, event.target.value)}
       >
         <MenuItem value={'EXPENSE'}>Expense</MenuItem>

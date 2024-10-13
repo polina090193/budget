@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { CategoriesContext } from '@/context-providers/CategoriesProvider';
 import DynamicSelect from '../../../components/inputs/select/DynamicSelect';
 import { FieldAttributes, FormikProps, FormikSharedConfig/* , useFormikContext */ } from 'formik';
@@ -8,19 +8,19 @@ import { SelectChangeEvent } from '@mui/material';
 
 export default function CategorySelect({
   field,
-  defaultValue,
+  // defaultValue,
   isWithAll,
   isWithPlaceholder,
   onCategoryChange,
   sx,
   ...props
-}: FormikProps<FormikSharedConfig> & {
-  field?: FieldAttributes<any>,
+}: Partial<FormikProps<FormikSharedConfig>> & {
+  field?: FieldAttributes<unknown>,
   defaultValue?: number,
   isWithAll?: boolean,
   isWithPlaceholder?: boolean,
   onCategoryChange?: (value: number) => void,
-  sx?: { [key: string]: any }
+  sx?: { [key: string]: unknown }
 }) {
   const categories = useContext(CategoriesContext);
 

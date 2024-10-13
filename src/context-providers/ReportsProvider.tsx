@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from "next-auth/react";
-import { createContext, useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 import getReportByCategory from "../app/fetch/reports/getReportByCategory";
 
 export const ReportsContext = createContext<{

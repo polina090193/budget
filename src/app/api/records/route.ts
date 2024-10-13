@@ -1,17 +1,17 @@
 import { query } from "@/db";
 import { table_names } from "@/db/table_names";
-import { NextResponse, NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "@/enums/generalEnums";
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  const { searchParams } = new URL(req.url || '');
   
   const session = await getServerSession(authOptions);
   
   if (!session?.user?.id) {
-    return new Response("Authorization error.", {
+    return NextResponse.json({message: 'Authorization error.'}, {
       status: 401,
     });
   }
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
   const records = await query(recordsSQLQuery, params);
   
   if (!records) {
-    return new Response("Request failed", {
+    return NextResponse.json({message: 'Request failed'}, {
       status: 500,
     });
   }

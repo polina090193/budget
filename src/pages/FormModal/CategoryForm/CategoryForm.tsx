@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState, useMemo, useContext, useEffect } from "react";
-import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { GridRowIdGetter } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 
@@ -9,12 +9,8 @@ import { CategoriesContext } from "@/context-providers/CategoriesProvider";
 
 // import CustomSnackbar from "../../components/info/CustomSnackbar";
 import TitleField from "../inputs/TitleField";
-import SumField from "../inputs/SumField";
-import DateField from "../inputs/DateField";
 import DirectionField from "../inputs/DirectionField";
-import CategorySelect from "../inputs/CategorySelect";
 
-import { preventNotNum } from "@/utils/validation/inputFunctions/preventNotNum";
 import { DEFAULT_TRANSACTION_TYPE } from "@/enums/generalEnums";
 
 export default function CategoryForm({
@@ -25,7 +21,7 @@ export default function CategoryForm({
   user: NextAuthUser | undefined,
   selectedCategoryId?: GridRowIdGetter | null,
   closeForm: () => void,
-}) {
+}): JSX.Element {
 
   const categories = useContext(CategoriesContext);
   const fetchCategories = useMemo(() => categories?.fetchCategories ?? (() => { }), [categories]);
@@ -127,7 +123,7 @@ export default function CategoryForm({
         enableReinitialize={selectedCategoryId ? true : false}
         onSubmit={(values: any, { resetForm }: FormikHelpers<any>) => submitForm(values, resetForm)}
       >
-        {(props: FormikProps<any>) => (
+        {() => (
           <Form>
             <Field name="title" placeholder="Title" component={TitleField} />
             <Field name="type" placeholder="TransactionType" component={DirectionField} />

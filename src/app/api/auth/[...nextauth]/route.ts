@@ -4,8 +4,9 @@ import { query } from "@/db";
 import { table_names } from "@/db/table_names";
 import { compareSync } from 'bcryptjs';
 import { JWT } from 'next-auth/jwt';
+import { NextAuthOptions } from 'next-auth';
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       credentials: {},
@@ -37,10 +38,19 @@ export const authOptions = {
     async session(params: { session: Session; token: JWT }) {
       const { session, token } = params;
 
-      if (token?.sub && session?.user) {
-        session.user.id = Number(token.sub);
-      }
-      return Promise.resolve(session);
+      session.user = {
+        ...session.user,
+        id: token.sub,
+      };
+      // session.user = user || session.user;
+      
+      // if (token?.sub && session?.user) {
+      //   session.user.id = token.sub;
+      // } else {
+      //   session.user.id = user.id?.toString();
+      // }
+
+      return session;
     },
   },
   secret: process.env.AUTH_SECRET,

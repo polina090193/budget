@@ -1,4 +1,5 @@
 "use client";
+
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -13,6 +14,8 @@ export default function DateField({
   sx?: { [key: string]: any },
 }) {
   const { setFieldValue } = useFormikContext<any>();
+
+  if (!setFieldValue) return null;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

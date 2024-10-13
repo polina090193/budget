@@ -7,7 +7,7 @@ import { Box, Button } from "@mui/material";
 
 // import CustomSnackbar from "../../components/info/CustomSnackbar";
 
-import { CategoriesContext } from "@/context-providers/CategoriesProvider";
+// import { CategoriesContext } from "@/context-providers/CategoriesProvider";
 import { RecordsContext } from "@/context-providers/RecordsProvider";
 
 import TitleField from "../inputs/TitleField";
@@ -34,11 +34,11 @@ const RecordForm = memo(function RecordFormComponent({
 }) {
   const [formIsLoading, setFormIsLoading] = useState(false);
 
-  const categories = useContext(CategoriesContext);
-  const categoriesList = categories?.categoriesData ?? [];
+  // const categories = useContext(CategoriesContext);
+  // const categoriesList = categories?.categoriesData ?? [];
 
   const records = useContext(RecordsContext);
-  const fetchRecords = records?.fetchRecords ?? (() => { });
+  const fetchRecords = useMemo(() => records?.fetchRecords ?? (() => { }), [records?.fetchRecords]);
 
   const emptyRecord = useMemo(() => ({
     record_id: 0,

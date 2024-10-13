@@ -2,7 +2,7 @@
 // import { table_names } from "@/db/table_names";
 // import { NextResponse } from 'next/server';
 
-export async function PUT(req: Request) {
+export async function PUT(/* req: Request */) {
   // const body = await req.json();
   
   // const { name, type, user_id } = body;
