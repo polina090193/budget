@@ -5,7 +5,10 @@ import { ReportsContext } from '@/context-providers/ReportsProvider';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useSession } from 'next-auth/react';
 
-export default function PieChartByCategory({ type }: {type?: TransactionType}) {
+export default function PieChartByCategory(
+  { type, sx }: 
+  {type?: TransactionType, sx?: { [key: string]: unknown }}
+) {
   const { data: session } = useSession();
 
   const reports = useContext(ReportsContext);
@@ -42,8 +45,15 @@ export default function PieChartByCategory({ type }: {type?: TransactionType}) {
             })) ?? [],
           },
         ]}
-        width={400}
+        width={500}
         height={200}
+        slotProps={{
+          legend: {
+            position: {horizontal: 'left', vertical: 'top'},
+          },
+        }}
+        margin={{ right: -100 }}
+        sx={sx}
       />
     )
   } else {

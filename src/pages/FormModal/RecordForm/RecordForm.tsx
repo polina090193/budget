@@ -13,7 +13,7 @@ import { RecordsContext } from "@/context-providers/RecordsProvider";
 import TitleField from "../inputs/TitleField";
 import SumField from "../inputs/SumField";
 import DateField from "../inputs/DateField";
-import DirectionField from "../inputs/DirectionField";
+import TypeField from "../inputs/TypeField";
 import CategorySelect from "../inputs/CategorySelect";
 
 import { dateSQLadapter } from "@/utils/adapters/dateSQLadapter";
@@ -33,8 +33,7 @@ const RecordForm = memo(function RecordFormComponent({
 }) {
   const [formIsLoading, setFormIsLoading] = useState(false);
 
-  // const categories = useContext(CategoriesContext);
-  // const categoriesList = categories?.categoriesData ?? [];
+  const [categoryType, setCategoryType] = useState<TransactionType>('EXPENSE');
 
   const records = useContext(RecordsContext);
   const fetchRecords = useMemo(() => records?.fetchRecords ?? (() => { }), [records?.fetchRecords]);
@@ -173,7 +172,10 @@ const RecordForm = memo(function RecordFormComponent({
               }}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
-              <Field name="type" placeholder="TransactionType" component={DirectionField} sx={{ width: '50%' }} />
+              <Field name="type" placeholder="TransactionType" component={TypeField} sx={{ width: '50%' }} 
+              onChange={(value: TransactionType) => 
+                setCategoryType(value)}
+              />
               <Field name="sum"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => 
                   setFieldValue('myNumber', e.target.value.replace(/[^0-9]/g, ''))}
@@ -192,9 +194,11 @@ const RecordForm = memo(function RecordFormComponent({
                   name="category_id"
                   placeholder="Category"
                   component={CategorySelect}
+                  type={ categoryType }
                   onCategoryChange={(value: number) => {
-                    setCurrentRecord({ ...values, category_id: value });
-                  }}
+                    setFieldValue('category_id', value)}
+                    // setCurrentRecord({ ...values, category_id: value });
+                  }
                   defaultValue={values.category_id || 0}
                   isWithPlaceholder
                 />)

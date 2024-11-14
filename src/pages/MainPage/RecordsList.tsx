@@ -15,20 +15,23 @@ import styles from './assets/RecordsList.module.css'
 import { useSession } from 'next-auth/react';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/enums/generalEnums';
 import PieChartByCategory from '../../components/charts/PieChartByCategory';
+import { Box, Button } from '@mui/material';
 
 export default function RecordsList(
   {
     setShowRecordFormModal,
     setSelectedRecordId,
     selectedCategoryId,
+    sx,
   }: {
     setShowRecordFormModal: (value: boolean) => void,
     setSelectedRecordId: (value: GridRowIdGetter) => void,
     selectedCategoryId?: number,
+    sx?: { [key: string]: unknown }
   }
 ) {
   const { data: session } = useSession();
-  
+
   const categories = useContext(CategoriesContext);
   const categoriesList = useMemo(() => categories?.categoriesData ?? [], [categories?.categoriesData]);
 
@@ -76,6 +79,7 @@ export default function RecordsList(
     {
       field: 'type',
       headerName: '',
+      align: 'center',
       valueGetter: (params) => {
         if (!params.value) {
           return '?';
@@ -85,11 +89,18 @@ export default function RecordsList(
           return '➖';
         }
       },
-      width: 40
+      width: 100
     },
-    { field: 'date', headerName: 'Date', width: 120 },
-    { field: 'title', headerName: 'Title', width: 120 },
-    { field: 'sum', headerName: 'Sum', type: 'number', width: 80 },
+    { field: 'date', headerName: 'Date', width: 100 },
+    { field: 'title', headerName: 'Title', width: 150 },
+    {
+      field: 'sum',
+      headerName: 'Sum',
+      headerAlign: 'right',
+      align: 'right',
+      type: 'number',
+      width: 100
+    },
     {
       field: 'category_id',
       headerName: 'Category',
@@ -99,12 +110,14 @@ export default function RecordsList(
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 100,
+      headerAlign: 'right',
+      align: 'right',
+      width: 200,
       renderCell: (params) => (
-        <div>
-          <button onClick={updateRecord(params.row.record_id)}>Edit</button>
-          <button onClick={showConfirmDeleteModal(params.row.record_id)}>Delete</button>
-        </div>
+        <Box>
+          <Button onClick={updateRecord(params.row.record_id)}>Edit</Button>
+          <Button onClick={showConfirmDeleteModal(params.row.record_id)}>Delete</Button>
+        </Box>
       ),
     },
   ], [updateRecord, showConfirmDeleteModal, categoriesList]);
@@ -123,7 +136,7 @@ export default function RecordsList(
 
   if (session?.user) {
     return (
-      <>
+      <Box display={'flex'} justifyContent={'space-between'} width={'100%'} sx={sx}>
         <DataGrid
           getRowId={getRowId}
           rowCount={!areRecordsLoading && records ? records.total : 0}
@@ -141,9 +154,15 @@ export default function RecordsList(
           pageSizeOptions={PAGE_SIZE_OPTIONS}
         // checkboxSelection
         />
-        {!selectedCategoryId && <PieChartByCategory type="INCOME" />}
-        {!selectedCategoryId && <PieChartByCategory type="EXPENSE" />}
-      </>
+        <Box marginLeft={10} marginTop={10}>
+          {!selectedCategoryId && <Box>
+            <PieChartByCategory type="INCOME" />
+          </Box>}
+          {!selectedCategoryId && <Box marginTop={10}>
+            <PieChartByCategory type="EXPENSE" />
+          </Box>}
+        </Box>
+      </Box>
     )
   } else {
     return <p>Authentification error. Please log in again.</p>

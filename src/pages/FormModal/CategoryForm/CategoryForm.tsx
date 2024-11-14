@@ -9,7 +9,7 @@ import { CategoriesContext } from "@/context-providers/CategoriesProvider";
 
 // import CustomSnackbar from "../../components/info/CustomSnackbar";
 import TitleField from "../inputs/TitleField";
-import DirectionField from "../inputs/DirectionField";
+import TypeField from "../inputs/TypeField";
 
 import { DEFAULT_TRANSACTION_TYPE } from "@/enums/generalEnums";
 
@@ -125,7 +125,7 @@ export default function CategoryForm({
         {() => (
           <Form>
             <Field name="title" placeholder="Title" component={TitleField} />
-            <Field name="type" placeholder="TransactionType" component={DirectionField} />
+            <Field name="type" placeholder="TransactionType" component={TypeField} />
             <Button type="submit">{selectedCategoryId ? 'Update' : 'Create'}</Button>
           </Form>
         )

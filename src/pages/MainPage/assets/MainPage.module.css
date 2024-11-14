@@ -2,6 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6rem;
+  padding: 2rem 4rem;
   min-height: 100vh;
 }

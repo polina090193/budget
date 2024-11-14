@@ -9,6 +9,7 @@ import { SelectChangeEvent } from '@mui/material';
 export default function CategorySelect({
   field,
   // defaultValue,
+  type,
   isWithAll,
   isWithPlaceholder,
   onCategoryChange,
@@ -16,7 +17,8 @@ export default function CategorySelect({
   ...props
 }: Partial<FormikProps<FormikSharedConfig>> & {
   field?: FieldAttributes<unknown>,
-  defaultValue?: number,
+  type?: TransactionType,
+  // defaultValue?: number,
   isWithAll?: boolean,
   isWithPlaceholder?: boolean,
   onCategoryChange?: (value: number) => void,
@@ -25,8 +27,10 @@ export default function CategorySelect({
   const categories = useContext(CategoriesContext);
 
   const categoriesList = useMemo(() => (
-    categories?.categoriesData.map((item) => ({...item, id: item.category_id})) ?? []
-  ), [categories?.categoriesData]);
+    categories?.categoriesData
+      .filter((category) => type ? category.type === type : true)
+      .map((category) => ({...category, id: category.category_id})) ?? []
+  ), [categories?.categoriesData, type]);
 
 
   const categoriesListWithAll = useMemo(() => ([
