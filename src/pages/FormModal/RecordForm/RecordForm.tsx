@@ -78,18 +78,22 @@ const RecordForm = memo(function RecordFormComponent({
       setFormIsLoading(false);
       return emptyRecord;
     }
+    
     const recordRes = await fetch(`http://localhost:3000/api/records/${selectedRecordId}`);
 
     setFormIsLoading(false);
 
     if (!recordRes.ok) {
-      throw new Error('Failed to load record');
+      throw new Error('Failed to load record (not ok)');
     }
 
-    const record = await recordRes.json();
+    const record: BudgetRecord = await recordRes.json();
     if (!record) {
-      throw new Error('Failed to load record');
+      throw new Error('Failed to load record (no record)');
     }
+
+    setCategoryType(record.type);
+
     return record;
   }, [selectedRecordId, setFormIsLoading, emptyRecord]);
 
@@ -197,7 +201,6 @@ const RecordForm = memo(function RecordFormComponent({
                   type={ categoryType }
                   onCategoryChange={(value: number) => {
                     setFieldValue('category_id', value)}
-                    // setCurrentRecord({ ...values, category_id: value });
                   }
                   defaultValue={values.category_id || 0}
                   isWithPlaceholder
