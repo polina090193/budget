@@ -182,7 +182,7 @@ const RecordForm = memo(function RecordFormComponent({
               />
               <Field name="sum"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => 
-                  setFieldValue('myNumber', e.target.value.replace(/[^0-9]/g, ''))}
+                  setFieldValue('sum', e.target.value.replace(/[^0-9,.]/g, ''))}
                 placeholder="Sum" component={SumField} />
             </Box>
             <FieldWithErrorBadge

@@ -41,6 +41,7 @@ export default function RecordFormModal({
       onClose={() => handleClose()}
       aria-labelledby="modal-record-form"
       aria-describedby="modal-record-form"
+      role="dialog"
     >
       <Box sx={style}>
         <RecordForm user={user} selectedRecordId={selectedRecordId} closeForm={handleClose} />

@@ -31,26 +31,19 @@ export default function DynamicSelect<T extends SelectValue>(
         labelId={`${namePlural}-select-label`}
         label={`Select ${nameSingular}`}
         id={`${namePlural}-select`}
+        data-testid={`${namePlural}-select`}
         defaultValue={defaultValue}
         value={value}
-        onChange={(event) => onChange(event)}
         inputProps={{ 'aria-label': `Select ${nameSingular}` }}
+        onChange={(event) => onChange(event)}
       >
         {
           data.map((item: T) => {
-            if (item.id === defaultValue) {
-              return (
-                <MenuItem key={item.id} value={item.id} selected disabled={item.isPlaceholder}>
-                  {item.name}
-                </MenuItem>
-              )
-            } else {
-              return (
-                <MenuItem key={item.id} disabled={item.id === defaultValue} value={item.id}>
-                  {item.name}
-                </MenuItem>
-              )
-            }
+            return (
+              <MenuItem key={item.id} data-testid={item.name} disabled={item.id === defaultValue || item.isPlaceholder} value={item.id}>
+                {item.name}
+              </MenuItem>
+            )
           })
         }
       </Select>
